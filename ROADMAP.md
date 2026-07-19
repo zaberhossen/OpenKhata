@@ -36,15 +36,15 @@ Repo আর skeleton দাঁড় করানো। কোনো feature ন
 
 এটাই product-এর প্রাণ। কোনো server নেই এখনো — সব local।
 
-- [ ] IndexedDB layer via **Dexie.js** — schema: `contacts`, `transactions`, `businesses`
-- [ ] Client-generated UUID + `created_at`/`updated_at` প্রতিটা record-এ (future sync-এর জন্য এখনই)
-- [ ] Customer/Supplier list — add, edit, search
-- [ ] Transaction entry — got (পেলাম) / gave (দিলাম), amount, note, date
-- [ ] Per-contact balance auto-calculation (দেনা/পাওনা)
-- [ ] Running total / overall business balance
-- [ ] Transaction history per contact
-- [ ] Fast-entry UX — ২-৩ tap-এ একটা entry (এটা aladaভাবে polish করা)
-- [ ] Full Bangla UI + number formatting (৳, বাংলা সংখ্যা optional)
+- [x] IndexedDB layer via **Dexie.js** — schema: `contacts`, `transactions`, `businesses`
+- [x] Client-generated UUID + `created_at`/`updated_at` প্রতিটা record-এ (future sync-এর জন্য এখনই)
+- [x] Customer/Supplier list — add, edit, search
+- [x] Transaction entry — got (পেলাম) / gave (দিলাম), amount, note, date
+- [x] Per-contact balance auto-calculation (দেনা/পাওনা)
+- [x] Running total / overall business balance
+- [x] Transaction history per contact
+- [x] Fast-entry UX — ২-৩ tap-এ একটা entry (এটা aladaভাবে polish করা)
+- [x] Full Bangla UI + number formatting (৳, বাংলা সংখ্যা optional)
 
 **Exit criteria:** নেট বন্ধ করে পুরো bookkeeping করা যায়, refresh-এও ডেটা থাকে।
 
