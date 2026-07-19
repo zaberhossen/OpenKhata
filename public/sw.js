@@ -5,12 +5,15 @@
  * Workbox-generated worker once the ledger (Phase 1) needs finer-grained
  * caching strategies.
  */
-const VERSION = "v1";
+const VERSION = "v2";
 const PRECACHE = `openkhata-precache-${VERSION}`;
 const RUNTIME = `openkhata-runtime-${VERSION}`;
 
 const PRECACHE_URLS = [
   "/",
+  "/contact",
+  "/entry",
+  "/contact-form",
   "/offline",
   "/manifest.webmanifest",
   "/fonts/noto-sans-bengali-bengali.woff2",
@@ -56,6 +59,8 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Pages: network first, fall back to cache, then the offline page.
+  // ignoreSearch lets /contact?id=… reuse the precached /contact shell —
+  // screens read their params client-side, so the HTML is identical.
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
@@ -65,25 +70,50 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(async () => {
-          const cached = await caches.match(request);
+          const cached = await caches.match(request, { ignoreSearch: true });
           return cached ?? caches.match("/offline");
         }),
     );
     return;
   }
 
-  // Static assets (hashed JS/CSS, fonts, icons): cache first.
+  // Immutable assets (hashed build output, fonts, icons): cache first.
+  const immutable =
+    url.pathname.startsWith("/_next/static/") ||
+    url.pathname.startsWith("/fonts/") ||
+    url.pathname.startsWith("/icons/");
+
+  if (immutable) {
+    event.respondWith(
+      caches.match(request).then(
+        (cached) =>
+          cached ??
+          fetch(request).then((response) => {
+            if (response.ok) {
+              const copy = response.clone();
+              caches.open(RUNTIME).then((cache) => cache.put(request, copy));
+            }
+            return response;
+          }),
+      ),
+    );
+    return;
+  }
+
+  // Everything else (RSC payloads etc.): network first, cache fallback,
+  // so a new deploy is picked up as soon as the user is online.
   event.respondWith(
-    caches.match(request).then(
-      (cached) =>
-        cached ??
-        fetch(request).then((response) => {
-          if (response.ok) {
-            const copy = response.clone();
-            caches.open(RUNTIME).then((cache) => cache.put(request, copy));
-          }
-          return response;
-        }),
-    ),
+    fetch(request)
+      .then((response) => {
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(RUNTIME).then((cache) => cache.put(request, copy));
+        }
+        return response;
+      })
+      .catch(async () => {
+        const cached = await caches.match(request);
+        return cached ?? Response.error();
+      }),
   );
 });

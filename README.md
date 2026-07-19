@@ -20,8 +20,10 @@ OpenKhata-র লক্ষ্য: **২-৩ ট্যাপে লেনদে�
 
 ## Status
 
-🚧 **Phase 0 — Foundation.** The app is an installable PWA shell; the core ledger
-(Phase 1) is up next. See the full plan in [ROADMAP.md](./ROADMAP.md).
+✅ **Phase 1 — Core Ledger** is done: the app is a fully offline bookkeeping
+tool — contacts, দিলাম/পেলাম entries, balances, history and search, all stored
+in IndexedDB on the device. Cloud sync & backup (Phase 2) is up next. See the
+full plan in [ROADMAP.md](./ROADMAP.md).
 
 ## Stack
 
