@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Noto Sans Bengali — self-hosted variable font (weights 400–700).
+ * Committed to the repo so builds and first paint never depend on
+ * Google Fonts being reachable (offline-first, flaky-3G-first).
+ */
+@font-face {
+  font-family: "Noto Sans Bengali";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/noto-sans-bengali-bengali.woff2") format("woff2");
+  unicode-range:
+    U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8,
+    U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC,
+    U+A8F1;
+}
+
+@font-face {
+  font-family: "Noto Sans Bengali";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/noto-sans-bengali-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+ * Design tokens.
+ *
+ * Primary is teal (trust / money), deliberately distinct from the two
+ * semantic ledger colors every khata user already knows:
+ *   got  (পেলাম)  = green
+ *   gave (দিলাম)  = red
+ */
+:root {
+  --color-primary: 13 148 136; /* teal-600 */
+  --color-primary-dark: 15 118 110; /* teal-700 */
+  --color-primary-light: 204 251 241; /* teal-100 */
+
+  --color-got: 22 163 74; /* green-600 */
+  --color-got-light: 220 252 231; /* green-100 */
+  --color-gave: 220 38 38; /* red-600 */
+  --color-gave-light: 254 226 226; /* red-100 */
+
+  --color-background: 248 250 252; /* slate-50 */
+  --color-surface: 255 255 255;
+  --color-border: 226 232 240; /* slate-200 */
+  --color-text: 15 23 42; /* slate-900 */
+  --color-text-muted: 100 116 139; /* slate-500 */
+
+  /* Minimum tap target: 48px (cheap phones, big thumbs) */
+  --tap-target-min: 3rem;
+}
+
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-text));
+}

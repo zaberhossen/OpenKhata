@@ -1,0 +1,40 @@
+{
+  "name": "ওপেনখাতা — ডিজিটাল বাকির খাতা",
+  "short_name": "ওপেনখাতা",
+  "description": "ছোট ব্যবসার জন্য ফ্রি ও ওপেন-সোর্স বাকির খাতা — নেট ছাড়াই চলে, ডেটা হারায় না।",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "bn",
+  "dir": "ltr",
+  "background_color": "#f8fafc",
+  "theme_color": "#0d9488",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

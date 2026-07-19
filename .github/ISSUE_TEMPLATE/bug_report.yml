@@ -1,0 +1,46 @@
+name: 🐛 Bug report / বাগ রিপোর্ট
+description: Something broke — data loss and offline bugs jump the queue.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened? / কী হয়েছে?
+      description: Also tell us what you expected to happen instead.
+      placeholder: বাগটা কী, আর আপনি কী আশা করেছিলেন?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce / কীভাবে আবার ঘটানো যায়?
+      placeholder: |
+        1. Open the app
+        2. Tap on ...
+        3. See error
+    validations:
+      required: true
+  - type: dropdown
+    id: connectivity
+    attributes:
+      label: Were you online or offline?
+      options:
+        - Online
+        - Offline
+        - Flaky connection (going in and out)
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device & browser / ডিভাইস ও ব্রাউজার
+      placeholder: e.g. Redmi 9A, Chrome 126, Android 11
+    validations:
+      required: true
+  - type: checkboxes
+    id: data-loss
+    attributes:
+      label: Data loss?
+      options:
+        - label: This bug caused me to lose data (highest priority — এটা সবচেয়ে জরুরি)

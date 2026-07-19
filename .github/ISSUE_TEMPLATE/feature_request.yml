@@ -1,0 +1,38 @@
+name: ✨ Feature request / ফিচার প্রস্তাব
+description: Suggest an idea. Check ROADMAP.md first — it may already be planned.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve? / কোন সমস্যার সমাধান?
+      description: Describe the real-world situation, ideally from a shopkeeper's perspective.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution / প্রস্তাবিত সমাধান
+    validations:
+      required: true
+  - type: dropdown
+    id: roadmap-fit
+    attributes:
+      label: Where does this fit in the roadmap?
+      description: See ROADMAP.md — we ship phases in order.
+      options:
+        - "Phase 1 — Core Ledger"
+        - "Phase 2 — Auth & Sync"
+        - "Phase 3 — Reminders, Reports & Sharing"
+        - "Phase 4 — Payments"
+        - "Phase 5 — Growth / backlog"
+        - "Not sure"
+    validations:
+      required: true
+  - type: checkboxes
+    id: offline
+    attributes:
+      label: Offline check
+      options:
+        - label: This feature can work fully offline (or I've explained why it can't)
+          required: true
