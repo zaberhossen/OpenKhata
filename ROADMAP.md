@@ -54,13 +54,13 @@ Repo আর skeleton দাঁড় করানো। কোনো feature ন
 
 Local ডেটাকে cloud-এর সাথে জোড়া দেওয়া — ফোন হারালেও ডেটা থাকে।
 
-- [ ] Phone/OTP auth (Supabase Auth) — email নয়, এই userbase-এ phone-ই natural
-- [ ] Postgres schema (mirror of local) + Row Level Security
-- [ ] **Sync engine** — offline queue, push on reconnect, pull on login
-- [ ] Conflict resolution — last-write-wins দিয়ে শুরু (`updated_at` ভিত্তিক)
-- [ ] Sync status indicator (synced / pending / offline)
-- [ ] Manual "backup now" + auto background sync
-- [ ] Multi-device — একই account একাধিক ফোনে
+- [x] Phone/OTP auth (Supabase Auth) — email নয়, এই userbase-এ phone-ই natural
+- [x] Postgres schema (mirror of local) + Row Level Security
+- [x] **Sync engine** — offline queue, push on reconnect, pull on login
+- [x] Conflict resolution — last-write-wins দিয়ে শুরু (`updated_at` ভিত্তিক)
+- [x] Sync status indicator (synced / pending / offline)
+- [x] Manual "backup now" + auto background sync
+- [x] Multi-device — একই account একাধিক ফোনে
 
 **Exit criteria:** ফোন A-তে entry → ফোন B-তে login করলে ডেটা আসে। Offline entry পরে sync হয়।
 
@@ -117,7 +117,7 @@ Core stable হলে তারপর, অথবা contributor-দের জন
 - [ ] Clear `README` with screenshots + live demo link
 - [x] `CONTRIBUTING.md` + `CODE_OF_CONDUCT.md`
 - [ ] "good first issue" label করা issue তৈরি রাখা
-- [ ] Architecture doc — offline sync কীভাবে কাজ করে (contributor-দের জন্য কঠিন অংশ)
+- [x] Architecture doc — offline sync কীভাবে কাজ করে (contributor-দের জন্য কঠিন অংশ)
 - [ ] Demo deployment (Vercel) — seed data সহ, যাতে কেউ instantly try করতে পারে
 - [ ] Changelog + semver release
 - [ ] Discussions/Discord for community

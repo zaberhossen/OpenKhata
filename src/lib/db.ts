@@ -41,10 +41,33 @@ export interface LedgerEntry {
   deleted_at: string | null;
 }
 
+/** Name of a synced table — used by the outbox and the sync engine. */
+export type SyncedTable = "businesses" | "contacts" | "transactions";
+
+/**
+ * One queued local change awaiting push. `id` is `${table}:${recordId}`, so
+ * repeated edits to the same record collapse into a single pending push of
+ * its latest state.
+ */
+export interface OutboxItem {
+  id: string;
+  table: SyncedTable;
+  record_id: string;
+  queued_at: string;
+}
+
+/** Key-value store for sync cursors, last-sync time, etc. */
+export interface MetaItem {
+  key: string;
+  value: string;
+}
+
 class OpenKhataDB extends Dexie {
   businesses!: Table<Business, string>;
   contacts!: Table<Contact, string>;
   transactions!: Table<LedgerEntry, string>;
+  outbox!: Table<OutboxItem, string>;
+  meta!: Table<MetaItem, string>;
 
   constructor() {
     super("openkhata");
@@ -52,6 +75,13 @@ class OpenKhataDB extends Dexie {
       businesses: "id, updated_at",
       contacts: "id, business_id, name, updated_at",
       transactions: "id, contact_id, business_id, entry_date, updated_at",
+    });
+    this.version(2).stores({
+      businesses: "id, updated_at",
+      contacts: "id, business_id, name, updated_at",
+      transactions: "id, contact_id, business_id, entry_date, updated_at",
+      outbox: "id, table, queued_at",
+      meta: "key",
     });
   }
 }
