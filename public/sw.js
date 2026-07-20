@@ -5,7 +5,7 @@
  * Workbox-generated worker once the ledger (Phase 1) needs finer-grained
  * caching strategies.
  */
-const VERSION = "v2";
+const VERSION = "v3";
 const PRECACHE = `openkhata-precache-${VERSION}`;
 const RUNTIME = `openkhata-runtime-${VERSION}`;
 
@@ -14,6 +14,8 @@ const PRECACHE_URLS = [
   "/contact",
   "/entry",
   "/contact-form",
+  "/login",
+  "/settings",
   "/offline",
   "/manifest.webmanifest",
   "/fonts/noto-sans-bengali-bengali.woff2",

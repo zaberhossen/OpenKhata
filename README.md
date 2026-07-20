@@ -20,10 +20,14 @@ OpenKhata-র লক্ষ্য: **২-৩ ট্যাপে লেনদে�
 
 ## Status
 
-✅ **Phase 1 — Core Ledger** is done: the app is a fully offline bookkeeping
-tool — contacts, দিলাম/পেলাম entries, balances, history and search, all stored
-in IndexedDB on the device. Cloud sync & backup (Phase 2) is up next. See the
-full plan in [ROADMAP.md](./ROADMAP.md).
+✅ **Phase 2 — Auth, Cloud Sync & Backup** is done: OTP login (phone/email via
+Supabase), background sync with an offline queue, last-write-wins conflict
+resolution, a live sync indicator, and manual "backup now" — on top of the
+fully offline Phase 1 ledger. Cloud sync is **optional**: without
+configuration the app stays 100% local. Setup:
+[supabase/README.md](./supabase/README.md) · Design:
+[docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) · Plan:
+[ROADMAP.md](./ROADMAP.md).
 
 ## Stack
 

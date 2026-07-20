@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useContactsWithBalances } from "@/hooks/use-ledger";
 import { formatTaka } from "@/lib/money";
 import { BalanceAmount, ScreenLoading } from "@/components/ledger/shared";
+import { SyncIndicator } from "@/components/ledger/sync-indicator";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -22,10 +23,11 @@ export default function Home() {
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white">
           খ
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="text-lg font-bold leading-tight">ওপেনখাতা</h1>
           <p className="text-sm text-text-muted">ডিজিটাল বাকির খাতা</p>
         </div>
+        <SyncIndicator />
       </header>
 
       <section
@@ -109,6 +111,7 @@ export default function Home() {
       <nav aria-hidden className="hidden">
         <Link href="/contact">contact</Link>
         <Link href="/entry">entry</Link>
+        <Link href="/login">login</Link>
         <Link href="/offline">offline</Link>
       </nav>
     </div>
