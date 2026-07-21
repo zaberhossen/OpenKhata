@@ -20,12 +20,13 @@ OpenKhata-র লক্ষ্য: **২-৩ ট্যাপে লেনদে�
 
 ## Status
 
-✅ **Phase 2 — Auth, Cloud Sync & Backup** is done: OTP login (phone/email via
-Supabase), background sync with an offline queue, last-write-wins conflict
-resolution, a live sync indicator, and manual "backup now" — on top of the
-fully offline Phase 1 ledger. Cloud sync is **optional**: without
-configuration the app stays 100% local. Setup:
-[supabase/README.md](./supabase/README.md) · Design:
+✅ **Phase 3 — Reminders, Reports & Sharing** is done: one-tap payment
+reminders and per-contact statements shared via WhatsApp/SMS/Web-Share (free,
+device-native — no SMS gateway), a reports screen with date-range summaries and
+per-contact breakdown, CSV export and print-to-PDF, plus local due-summary
+notifications. Built on the Phase 2 cloud sync and the fully offline Phase 1
+ledger. Cloud sync stays **optional** — without configuration the app is 100%
+local. Setup: [supabase/README.md](./supabase/README.md) · Design:
 [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) · Plan:
 [ROADMAP.md](./ROADMAP.md).
 
