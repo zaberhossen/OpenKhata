@@ -70,12 +70,12 @@ Local ডেটাকে cloud-এর সাথে জোড়া দেওয�
 
 এখানেই product "just a ledger" থেকে "business tool" হয়।
 
-- [ ] Transaction share — WhatsApp / SMS-এ লেনদেনের detail পাঠানো (deep link দিয়ে শুরু, free)
-- [ ] Payment reminder — বাকি কাস্টমারকে reminder পাঠানো
-- [ ] Web Push notification (PWA) — নিজের reminder/summary
-- [ ] Reports — daily/weekly/monthly summary, profit-loss overview
-- [ ] Date-range filter + export (CSV / PDF)
-- [ ] Per-contact statement generate + share
+- [x] Transaction share — WhatsApp / SMS-এ লেনদেনের detail পাঠানো (deep link দিয়ে শুরু, free)
+- [x] Payment reminder — বাকি কাস্টমারকে reminder পাঠানো
+- [~] Web Push notification (PWA) — নিজের reminder/summary _(local notification চালু; background push পরে — push server লাগে)_
+- [x] Reports — daily/weekly/monthly summary, profit-loss overview
+- [x] Date-range filter + export (CSV / PDF — print-to-PDF)
+- [x] Per-contact statement generate + share
 
 **Exit criteria:** এক ট্যাপে কাস্টমারকে reminder পাঠানো যায়, মাসিক report দেখা যায়।
 

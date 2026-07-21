@@ -27,6 +27,14 @@ export default function Home() {
           <h1 className="text-lg font-bold leading-tight">ওপেনখাতা</h1>
           <p className="text-sm text-text-muted">ডিজিটাল বাকির খাতা</p>
         </div>
+        <Link
+          href="/reports"
+          aria-label="রিপোর্ট"
+          title="রিপোর্ট"
+          className="flex min-h-tap min-w-tap items-center justify-center rounded-full text-2xl hover:bg-border/50"
+        >
+          📊
+        </Link>
         <SyncIndicator />
       </header>
 
@@ -112,6 +120,7 @@ export default function Home() {
         <Link href="/contact">contact</Link>
         <Link href="/entry">entry</Link>
         <Link href="/login">login</Link>
+        <Link href="/reports">reports</Link>
         <Link href="/offline">offline</Link>
       </nav>
     </div>

@@ -1,10 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isSyncConfigured } from "@/lib/supabase";
 import { signOutKeepingData, syncNow } from "@/lib/sync";
 import { useAuthUser, useSyncStatus } from "@/hooks/use-sync";
+import { useContactsWithBalances } from "@/hooks/use-ledger";
+import { formatTaka } from "@/lib/money";
+import {
+  notificationPermission,
+  requestNotificationPermission,
+  showLocalNotification,
+} from "@/lib/notify";
 import { BackLink } from "@/components/ledger/shared";
 
 const STATE_LABELS: Record<string, string> = {
@@ -27,7 +34,27 @@ function formatTimestamp(iso: string): string {
 export default function SettingsPage() {
   const { user } = useAuthUser();
   const status = useSyncStatus();
+  const ledger = useContactsWithBalances();
   const [busy, setBusy] = useState(false);
+  const [perm, setPerm] = useState<string>("default");
+
+  useEffect(() => {
+    setPerm(notificationPermission());
+  }, []);
+
+  async function enableReminders() {
+    const result = await requestNotificationPermission();
+    setPerm(result);
+    if (result === "granted") {
+      const receivable = ledger?.totals.receivable ?? 0;
+      await showLocalNotification(
+        "ওপেনখাতা রিমাইন্ডার",
+        receivable > 0
+          ? `আপনি মোট ${formatTaka(receivable)} পাবেন। বাকি কাস্টমারদের রিমাইন্ডার পাঠাতে পারেন।`
+          : "রিমাইন্ডার চালু হলো। বাকি জমলে এখানে সারাংশ দেখাবে।",
+      );
+    }
+  }
 
   async function backupNow() {
     if (busy) return;
@@ -115,6 +142,36 @@ export default function SettingsPage() {
             লগইন করে ব্যাকআপ চালু করুন
           </Link>
         )}
+
+        <section className="rounded-2xl border border-border bg-surface p-4">
+          <h2 className="text-sm text-text-muted">রিমাইন্ডার নোটিফিকেশন</h2>
+          {perm === "unsupported" ? (
+            <p className="mt-1 text-sm text-text-muted">
+              এই ব্রাউজারে নোটিফিকেশন সমর্থিত নয়।
+            </p>
+          ) : perm === "granted" ? (
+            <p className="mt-1 text-sm text-got">
+              চালু আছে ✓ — অ্যাপ খুললে বাকির সারাংশ দেখাবে।
+            </p>
+          ) : perm === "denied" ? (
+            <p className="mt-1 text-sm text-text-muted">
+              বন্ধ আছে। ব্রাউজার সেটিংস থেকে অনুমতি দিলে চালু হবে।
+            </p>
+          ) : (
+            <>
+              <p className="mt-1 text-sm text-text-muted">
+                অ্যাপ খুললে বাকির সারাংশ মনে করিয়ে দেবে।
+              </p>
+              <button
+                type="button"
+                onClick={enableReminders}
+                className="mt-3 min-h-tap w-full rounded-2xl border border-primary font-semibold text-primary hover:bg-primary-light"
+              >
+                রিমাইন্ডার চালু করুন
+              </button>
+            </>
+          )}
+        </section>
 
         <section className="rounded-2xl border border-border bg-surface p-4 text-sm text-text-muted">
           <p>

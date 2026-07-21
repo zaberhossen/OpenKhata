@@ -7,11 +7,13 @@ import { useContactLedger } from "@/hooks/use-ledger";
 import { deleteEntry } from "@/lib/repo";
 import { formatTaka } from "@/lib/money";
 import { formatDate } from "@/lib/dates";
+import { reminderMessage, statementMessage } from "@/lib/share";
 import {
   BackLink,
   BalanceAmount,
   ScreenLoading,
 } from "@/components/ledger/shared";
+import { ShareSheet } from "@/components/ledger/share-sheet";
 
 function ContactScreen() {
   const contactId = useSearchParams().get("id");
@@ -66,6 +68,29 @@ function ContactScreen() {
           <BalanceAmount balance={balance} />
         </span>
       </section>
+
+      {entries.length > 0 && (
+        <section className="mt-3 grid grid-cols-2 gap-3">
+          {balance > 0 && (
+            <ShareSheet
+              title={`${contact.name}-কে রিমাইন্ডার`}
+              message={reminderMessage(contact, balance)}
+              phone={contact.phone}
+              triggerLabel="🔔 রিমাইন্ডার পাঠান"
+              triggerClassName="flex min-h-tap items-center justify-center rounded-2xl border border-primary font-semibold text-primary hover:bg-primary-light"
+            />
+          )}
+          <ShareSheet
+            title={`${contact.name} — হিসাব`}
+            message={statementMessage(contact, entries, balance)}
+            phone={contact.phone}
+            triggerLabel="📤 হিসাব শেয়ার"
+            triggerClassName={`flex min-h-tap items-center justify-center rounded-2xl border border-border font-semibold text-text hover:bg-background ${
+              balance > 0 ? "" : "col-span-2"
+            }`}
+          />
+        </section>
+      )}
 
       <main className="mt-4 flex flex-1 flex-col pb-28">
         {entries.length === 0 ? (

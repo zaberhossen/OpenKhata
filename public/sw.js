@@ -5,7 +5,7 @@
  * Workbox-generated worker once the ledger (Phase 1) needs finer-grained
  * caching strategies.
  */
-const VERSION = "v3";
+const VERSION = "v4";
 const PRECACHE = `openkhata-precache-${VERSION}`;
 const RUNTIME = `openkhata-runtime-${VERSION}`;
 
@@ -16,6 +16,7 @@ const PRECACHE_URLS = [
   "/contact-form",
   "/login",
   "/settings",
+  "/reports",
   "/offline",
   "/manifest.webmanifest",
   "/fonts/noto-sans-bengali-bengali.woff2",
@@ -45,6 +46,21 @@ self.addEventListener("activate", (event) => {
         ),
       )
       .then(() => self.clients.claim()),
+  );
+});
+
+// Tapping a reminder notification focuses an open tab, or opens the app.
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clients) => {
+        for (const client of clients) {
+          if ("focus" in client) return client.focus();
+        }
+        return self.clients.openWindow("/");
+      }),
   );
 });
 
