@@ -16,7 +16,17 @@ export function getSupabase(): SupabaseClient {
     throw new Error("Supabase is not configured (see .env.example)");
   }
   if (!client) {
-    client = createClient(url, anonKey);
+    client = createClient(url, anonKey, {
+      auth: {
+        // PKCE flow: OAuth + magic-link redirects carry a ?code we exchange
+        // explicitly on /auth/callback (detectSessionInUrl off so the callback
+        // page owns the exchange — no double-consume race).
+        flowType: "pkce",
+        detectSessionInUrl: false,
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    });
   }
   return client;
 }
