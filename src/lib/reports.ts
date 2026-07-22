@@ -1,6 +1,11 @@
 import type { Contact, LedgerEntry } from "./db";
 import { formatTaka } from "./money";
 import { formatDate } from "./dates";
+import {
+  PAYMENT_METHODS,
+  paymentMethodLabel,
+  type PaymentMethod,
+} from "./payments";
 
 export type RangePreset = "today" | "week" | "month" | "all";
 
@@ -55,12 +60,42 @@ export function summarize(entries: LedgerEntry[]): ReportSummary {
   };
 }
 
+export interface MethodBreakdownRow {
+  method: PaymentMethod;
+  label: string;
+  got: number; // poisha received via this method
+  gave: number; // poisha given via this method
+}
+
+/**
+ * Money grouped by payment method (Phase 4). Untagged entries are skipped —
+ * this answers "how much came in via bKash vs cash", not the full total.
+ * Only methods actually used appear, in PAYMENT_METHODS order.
+ */
+export function breakdownByMethod(
+  entries: LedgerEntry[],
+): MethodBreakdownRow[] {
+  const totals = new Map<PaymentMethod, { got: number; gave: number }>();
+  for (const e of entries) {
+    if (!e.payment_method) continue;
+    const row = totals.get(e.payment_method) ?? { got: 0, gave: 0 };
+    if (e.type === "got") row.got += e.amount;
+    else row.gave += e.amount;
+    totals.set(e.payment_method, row);
+  }
+  return PAYMENT_METHODS.filter((m) => totals.has(m.value)).map((m) => ({
+    method: m.value,
+    label: m.label,
+    ...totals.get(m.value)!,
+  }));
+}
+
 /** Build a CSV (with Bangla-friendly UTF-8 BOM) of the given entries. */
 export function toCsv(
   entries: LedgerEntry[],
   contactName: (id: string) => string,
 ): string {
-  const header = ["তারিখ", "নাম", "ধরন", "টাকা", "বিবরণ"];
+  const header = ["তারিখ", "নাম", "ধরন", "টাকা", "মাধ্যম", "বিবরণ"];
   const rows = [...entries]
     .sort(
       (a, b) =>
@@ -72,6 +107,7 @@ export function toCsv(
       contactName(e.contact_id),
       e.type === "gave" ? "দিলাম" : "পেলাম",
       (e.amount / 100).toFixed(2),
+      paymentMethodLabel(e.payment_method),
       e.note,
     ]);
   const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;

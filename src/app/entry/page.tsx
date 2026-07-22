@@ -6,6 +6,7 @@ import { useContactLedger } from "@/hooks/use-ledger";
 import { addEntry } from "@/lib/repo";
 import { parseTaka } from "@/lib/money";
 import { todayISODate } from "@/lib/dates";
+import { PAYMENT_METHODS, type PaymentMethod } from "@/lib/payments";
 import { BackLink, ScreenLoading } from "@/components/ledger/shared";
 
 function EntryScreen() {
@@ -18,6 +19,7 @@ function EntryScreen() {
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [entryDate, setEntryDate] = useState(todayISODate);
+  const [method, setMethod] = useState<PaymentMethod | null>(null);
   const [saving, setSaving] = useState(false);
 
   if (!ledger) return <ScreenLoading />;
@@ -43,6 +45,7 @@ function EntryScreen() {
       amount: poisha!,
       note,
       entryDate,
+      paymentMethod: method,
     });
     router.replace(`/contact?id=${contact.id}`);
   }
@@ -93,6 +96,35 @@ function EntryScreen() {
             className="min-h-tap rounded-2xl border border-border bg-surface px-4 outline-none focus:border-primary"
           />
         </label>
+
+        <fieldset className="flex flex-col gap-1">
+          <legend className="text-sm text-text-muted">
+            {gave ? "কীভাবে দিলেন?" : "কীভাবে পেলেন?"} (ঐচ্ছিক)
+          </legend>
+          <div className="mt-1 flex flex-wrap gap-2">
+            {PAYMENT_METHODS.map((m) => {
+              const selected = method === m.value;
+              return (
+                <button
+                  key={m.value}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() =>
+                    setMethod((cur) => (cur === m.value ? null : m.value))
+                  }
+                  className={`flex min-h-tap items-center gap-1.5 rounded-2xl border px-4 text-sm font-semibold ${
+                    selected
+                      ? "border-primary bg-primary-light text-primary-dark"
+                      : "border-border bg-surface text-text-muted"
+                  }`}
+                >
+                  <span aria-hidden>{m.icon}</span>
+                  {m.label}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
 
         <label className="flex flex-col gap-1">
           <span className="text-sm text-text-muted">তারিখ</span>

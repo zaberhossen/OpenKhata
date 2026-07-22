@@ -1,4 +1,5 @@
 import Dexie, { type Table } from "dexie";
+import type { PaymentMethod } from "./payments";
 
 export type ContactKind = "customer" | "supplier";
 export type EntryType = "got" | "gave";
@@ -36,6 +37,8 @@ export interface LedgerEntry {
   amount: number;
   note: string;
   entry_date: string; // YYYY-MM-DD (user-chosen date, not created_at)
+  /** How the money moved (Phase 4). null = not recorded; not indexed. */
+  payment_method: PaymentMethod | null;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
@@ -83,6 +86,25 @@ class OpenKhataDB extends Dexie {
       outbox: "id, table, queued_at",
       meta: "key",
     });
+    // v3 adds LedgerEntry.payment_method (Phase 4). It isn't indexed, so the
+    // stores are unchanged; the upgrade only backfills the field to null on
+    // existing rows so every record matches the type.
+    this.version(3)
+      .stores({
+        businesses: "id, updated_at",
+        contacts: "id, business_id, name, updated_at",
+        transactions: "id, contact_id, business_id, entry_date, updated_at",
+        outbox: "id, table, queued_at",
+        meta: "key",
+      })
+      .upgrade((tx) =>
+        tx
+          .table("transactions")
+          .toCollection()
+          .modify((t) => {
+            if (t.payment_method === undefined) t.payment_method = null;
+          }),
+      );
   }
 }
 

@@ -7,8 +7,8 @@ and syncs across devices.
 ## 1. Create a project
 
 Create a free project at [supabase.com](https://supabase.com), then run the
-migration in `migrations/0001_init.sql` — either paste it into the SQL Editor
-(Dashboard → SQL Editor → New query) or use the CLI:
+migrations in `migrations/` in order (`0001_init.sql`, `0002_…`) — either paste
+them into the SQL Editor (Dashboard → SQL Editor → New query) or use the CLI:
 
 ```bash
 supabase link --project-ref <your-project-ref>

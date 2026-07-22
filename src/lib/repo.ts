@@ -5,6 +5,7 @@ import {
   type EntryType,
   type SyncedTable,
 } from "./db";
+import type { PaymentMethod } from "./payments";
 import { newId, nowISO } from "./ids";
 
 const DEFAULT_BUSINESS_NAME = "আমার ব্যবসা";
@@ -122,6 +123,7 @@ export async function addEntry(input: {
   amount: number; // poisha
   note: string;
   entryDate: string; // YYYY-MM-DD
+  paymentMethod?: PaymentMethod | null;
 }): Promise<string> {
   return db.transaction(
     "rw",
@@ -140,6 +142,7 @@ export async function addEntry(input: {
         amount: input.amount,
         note: input.note.trim(),
         entry_date: input.entryDate,
+        payment_method: input.paymentMethod ?? null,
         created_at: now,
         updated_at: now,
         deleted_at: null,

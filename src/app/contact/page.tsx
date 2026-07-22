@@ -7,6 +7,7 @@ import { useContactLedger } from "@/hooks/use-ledger";
 import { deleteEntry } from "@/lib/repo";
 import { formatTaka } from "@/lib/money";
 import { formatDate } from "@/lib/dates";
+import { paymentMethodInfo } from "@/lib/payments";
 import { reminderMessage, statementMessage } from "@/lib/share";
 import {
   BackLink,
@@ -106,8 +107,17 @@ function ContactScreen() {
             {entries.map((entry) => (
               <li key={entry.id} className="flex items-center gap-3 px-4 py-3">
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-text-muted">
+                  <p className="flex items-center gap-1.5 text-sm text-text-muted">
                     {formatDate(entry.entry_date)}
+                    {(() => {
+                      const m = paymentMethodInfo(entry.payment_method);
+                      return m ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 text-xs font-medium text-text">
+                          <span aria-hidden>{m.icon}</span>
+                          {m.label}
+                        </span>
+                      ) : null;
+                    })()}
                   </p>
                   {entry.note && <p className="truncate">{entry.note}</p>}
                 </div>

@@ -5,6 +5,7 @@ import { useAllData } from "@/hooks/use-all-data";
 import { todayISODate } from "@/lib/dates";
 import { formatTaka } from "@/lib/money";
 import {
+  breakdownByMethod,
   downloadFile,
   inRange,
   presetRange,
@@ -33,6 +34,7 @@ export default function ReportsPage() {
     [data, range],
   );
   const summary = useMemo(() => summarize(filtered), [filtered]);
+  const byMethod = useMemo(() => breakdownByMethod(filtered), [filtered]);
 
   // Per-contact net within the range, biggest receivable first.
   const perContact = useMemo(() => {
@@ -158,6 +160,36 @@ export default function ReportsPage() {
                 >
                   {row.net >= 0 ? "+" : "−"}
                   {formatTaka(Math.abs(row.net))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {byMethod.length > 0 && (
+        <section className="mt-4">
+          <h2 className="mb-2 text-sm font-semibold text-text-muted">
+            মাধ্যম অনুযায়ী
+          </h2>
+          <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
+            {byMethod.map((row) => (
+              <li
+                key={row.method}
+                className="flex items-center justify-between gap-3 px-4 py-3"
+              >
+                <span className="truncate">{row.label}</span>
+                <span className="flex shrink-0 items-center gap-3 text-sm font-semibold">
+                  {row.got > 0 && (
+                    <span className="text-got">
+                      পেলাম {formatTaka(row.got)}
+                    </span>
+                  )}
+                  {row.gave > 0 && (
+                    <span className="text-gave">
+                      দিলাম {formatTaka(row.gave)}
+                    </span>
+                  )}
                 </span>
               </li>
             ))}
