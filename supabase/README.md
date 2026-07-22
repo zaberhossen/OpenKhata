@@ -17,11 +17,24 @@ supabase db push
 
 ## 2. Configure auth
 
-- **Phone/OTP (production):** Dashboard → Authentication → Providers → Phone.
-  Requires an SMS provider (e.g. Twilio); follow the Supabase docs to connect
-  one.
-- **Email/OTP (free, good for development):** enabled by default — no
-  configuration needed. The login screen supports both.
+- **Email magic link (free, default):** enabled by default — the login screen
+  emails a one-click login link. Add your Site URL and `<origin>/auth/callback`
+  under Dashboard → Authentication → URL Configuration (redirect allow-list).
+- **Google (recommended):** Dashboard → Authentication → Providers → Google.
+  Create an OAuth 2.0 **Web** client in Google Cloud, paste its Client ID +
+  secret, and add the Supabase callback
+  (`https://<ref>.supabase.co/auth/v1/callback`) to the Google client's
+  authorized redirect URIs.
+- **Phone/OTP (optional):** Dashboard → Authentication → Providers → Phone.
+  Requires an SMS provider (e.g. Twilio). Kept as a secondary login option.
+
+### Google Drive backup (optional)
+
+Separate from cloud sync: users can snapshot their ledger to their own Drive.
+Enable the **Google Drive API** in the same Google Cloud project, add the
+`drive.appdata` scope on the OAuth consent screen, and set
+`NEXT_PUBLIC_GOOGLE_CLIENT_ID` (the Web client ID) in `.env.local`. Without it
+the Drive backup controls stay hidden.
 
 ## 3. Wire up the app
 

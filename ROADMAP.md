@@ -110,6 +110,18 @@ Core stable হলে তারপর, অথবা contributor-দের জন
 
 ---
 
+## Growth & Polish (post-v1, চলমান)
+
+Core ledger stable — এখন adoption ও পরিচিতির কাজ:
+
+- [x] Promotional landing page (`/`) — app টা `/app`-এ সরানো হয়েছে
+- [x] আইকন লাইব্রেরি (lucide-react) — emoji বদলে consistent UI
+- [x] Auth: Google sign-in + email magic link (phone OTP secondary)
+- [x] Google Drive ব্যাকআপ — user-owned full snapshot (Supabase sync-এর পাশাপাশি)
+- [x] রেফারেল সিস্টেম — share code + "সমর্থক" ব্যাজ (cosmetic)
+
+---
+
 ## Open-Source Health (চলমান, সব phase জুড়ে)
 
 একটা repo শুধু কোড না — community ধরে রাখতে হয়।

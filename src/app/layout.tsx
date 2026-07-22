@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import { SyncProvider } from "@/components/pwa/sync-provider";
+import { ReferralWatcher } from "@/components/pwa/referral-watcher";
 
 export const metadata: Metadata = {
   title: "ওপেনখাতা",
@@ -32,6 +33,7 @@ export default function RootLayout({
         {children}
         <ServiceWorkerRegistration />
         <SyncProvider />
+        <ReferralWatcher />
       </body>
     </html>
   );
