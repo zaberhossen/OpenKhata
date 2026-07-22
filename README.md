@@ -20,13 +20,16 @@ OpenKhata-র লক্ষ্য: **২-৩ ট্যাপে লেনদে�
 
 ## Status
 
-✅ **Phase 3 — Reminders, Reports & Sharing** is done: one-tap payment
-reminders and per-contact statements shared via WhatsApp/SMS/Web-Share (free,
-device-native — no SMS gateway), a reports screen with date-range summaries and
-per-contact breakdown, CSV export and print-to-PDF, plus local due-summary
-notifications. Built on the Phase 2 cloud sync and the fully offline Phase 1
-ledger. Cloud sync stays **optional** — without configuration the app is 100%
-local. Setup: [supabase/README.md](./supabase/README.md) · Design:
+✅ Through **Phase 4 (Steps 1–2)** plus a **growth & polish** pass. On top of the
+offline Phase 1 ledger, Phase 2 cloud sync, and Phase 3 reminders/reports/
+sharing, the app now has: manual payment-method tagging + static merchant QR
+("টাকা নিন"); a promotional landing page at `/` with the app under `/app`; a
+lucide-react icon set; Google sign-in + email magic-link auth; user-owned
+Google Drive backup; and a referral system with a cosmetic "সমর্থক" badge.
+
+Cloud sync, Google login, and Drive backup are all **optional** — without
+configuration the app is 100% local and fully offline. Setup:
+[supabase/README.md](./supabase/README.md) · Design:
 [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) · Plan:
 [ROADMAP.md](./ROADMAP.md).
 

@@ -1,128 +1,169 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
-import { useState } from "react";
-import { useContactsWithBalances } from "@/hooks/use-ledger";
-import { formatTaka } from "@/lib/money";
-import { BalanceAmount, ScreenLoading } from "@/components/ledger/shared";
-import { SyncIndicator } from "@/components/ledger/sync-indicator";
+import {
+  WifiOff,
+  BadgeDollarSign,
+  Github,
+  ShieldCheck,
+  Zap,
+  BarChart3,
+  Share2,
+  Bell,
+  ArrowRight,
+  Smartphone,
+} from "lucide-react";
 
-export default function Home() {
-  const [search, setSearch] = useState("");
-  const data = useContactsWithBalances();
+const REPO_URL = "https://github.com/zaberhossen/OpenKhata";
 
-  const query = search.trim().toLowerCase();
-  const filtered = data?.contacts.filter(
-    (c) =>
-      !query || c.name.toLowerCase().includes(query) || c.phone.includes(query),
-  );
+export const metadata: Metadata = {
+  title: "ওপেনখাতা — ফ্রি ডিজিটাল বাকির খাতা",
+  description:
+    "ছোট ব্যবসার জন্য ফ্রি ও ওপেন-সোর্স ডিজিটাল বাকির খাতা — নেট ছাড়াই চলে, ডেটা কখনো হারায় না। ২-৩ ট্যাপে লেনদেন লিখুন।",
+};
 
+const FEATURES = [
+  {
+    icon: WifiOff,
+    title: "সম্পূর্ণ অফলাইন",
+    body: "নেট থাকুক বা না থাকুক, খাতা সবসময় চলে। ডেটা আপনার ফোনেই নিরাপদে থাকে।",
+  },
+  {
+    icon: Zap,
+    title: "২-৩ ট্যাপে এন্ট্রি",
+    body: "দিলাম / পেলাম — কয়েক সেকেন্ডে একটা লেনদেন। বড় বোতাম, সহজ স্ক্রিন।",
+  },
+  {
+    icon: Bell,
+    title: "বাকির রিমাইন্ডার",
+    body: "বাকি কাস্টমারকে এক ট্যাপে WhatsApp/SMS-এ ভদ্র রিমাইন্ডার পাঠান।",
+  },
+  {
+    icon: BarChart3,
+    title: "রিপোর্ট ও হিসাব",
+    body: "দৈনিক/মাসিক সারাংশ, কাস্টমার অনুযায়ী হিসাব, CSV ও প্রিন্ট।",
+  },
+  {
+    icon: Share2,
+    title: "হিসাব শেয়ার",
+    body: "প্রতি কাস্টমারের পূর্ণ লেনদেনের হিসাব সরাসরি শেয়ার করুন।",
+  },
+  {
+    icon: Smartphone,
+    title: "পেমেন্ট QR",
+    body: "নিজের বিকাশ/নগদ নম্বর QR হিসেবে দেখিয়ে টাকা নিন।",
+  },
+];
+
+const BADGES = [
+  { icon: BadgeDollarSign, label: "সম্পূর্ণ ফ্রি" },
+  { icon: Github, label: "ওপেন-সোর্স" },
+  { icon: ShieldCheck, label: "ডেটা আপনার" },
+];
+
+export default function LandingPage() {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-24">
+    <div className="mx-auto flex min-h-dvh max-w-3xl flex-col px-4">
       <header className="flex items-center gap-3 py-5">
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white">
           খ
         </div>
-        <div className="flex-1">
-          <h1 className="text-lg font-bold leading-tight">ওপেনখাতা</h1>
-          <p className="text-sm text-text-muted">ডিজিটাল বাকির খাতা</p>
-        </div>
-        <Link
-          href="/reports"
-          aria-label="রিপোর্ট"
-          title="রিপোর্ট"
-          className="flex min-h-tap min-w-tap items-center justify-center rounded-full text-2xl hover:bg-border/50"
+        <span className="flex-1 text-lg font-bold">ওপেনখাতা</span>
+        <a
+          href={REPO_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+          className="flex min-h-tap min-w-tap items-center justify-center rounded-full text-text-muted hover:bg-border/50"
         >
-          📊
-        </Link>
-        <SyncIndicator />
+          <Github size={22} aria-hidden />
+        </a>
       </header>
 
-      <section
-        aria-label="মোট হিসাব"
-        className="grid grid-cols-2 divide-x divide-border rounded-2xl border border-border bg-surface"
-      >
-        <div className="p-4 text-center">
-          <p className="text-sm text-text-muted">মোট পাবো</p>
-          <p className="text-xl font-bold text-got">
-            {data ? formatTaka(data.totals.receivable) : "—"}
+      <main className="flex flex-1 flex-col">
+        {/* Hero */}
+        <section className="flex flex-col items-center py-10 text-center sm:py-16">
+          <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
+            কাগজের বাকির খাতা ছেড়ে
+            <br />
+            <span className="text-primary">ডিজিটাল খাতায়</span> আসুন
+          </h1>
+          <p className="mt-4 max-w-xl text-text-muted">
+            ছোট ব্যবসার জন্য ফ্রি ও ওপেন-সোর্স ডিজিটাল বাকির খাতা। নেট ছাড়াই
+            চলে, ডেটা কখনো হারায় না — ২-৩ ট্যাপে লেনদেন লিখুন।
           </p>
-        </div>
-        <div className="p-4 text-center">
-          <p className="text-sm text-text-muted">মোট দেবো</p>
-          <p className="text-xl font-bold text-gave">
-            {data ? formatTaka(data.totals.payable) : "—"}
+
+          <Link
+            href="/app"
+            className="mt-8 flex min-h-tap items-center justify-center gap-2 rounded-2xl bg-primary px-8 text-lg font-bold text-white shadow-lg hover:bg-primary-dark"
+          >
+            অ্যাপ চালু করুন
+            <ArrowRight size={20} aria-hidden />
+          </Link>
+          <p className="mt-3 text-sm text-text-muted">
+            ইনস্টল লাগে না — ব্রাউজারেই চলে। ফোনে &quot;Add to Home Screen&quot;
+            দিয়ে অ্যাপের মতো ব্যবহার করুন।
           </p>
-        </div>
-      </section>
 
-      <input
-        type="search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="নাম বা ফোন নম্বর খুঁজুন…"
-        className="mt-4 min-h-tap rounded-2xl border border-border bg-surface px-4 outline-none focus:border-primary"
-      />
-
-      <main className="mt-4 flex flex-1 flex-col">
-        {!data ? (
-          <ScreenLoading />
-        ) : filtered!.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 text-center">
-            <span className="text-4xl">📒</span>
-            <p className="font-semibold">
-              {query ? "কাউকে পাওয়া যায়নি" : "খাতা এখনো ফাঁকা"}
-            </p>
-            {!query && (
-              <p className="text-sm text-text-muted">
-                নিচের বোতাম দিয়ে প্রথম কাস্টমার/সাপ্লায়ার যোগ করুন
-              </p>
-            )}
-          </div>
-        ) : (
-          <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
-            {filtered!.map((contact) => (
-              <li key={contact.id}>
-                <Link
-                  href={`/contact?id=${contact.id}`}
-                  className="flex min-h-tap items-center gap-3 px-4 py-3 hover:bg-background"
-                >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-light font-bold text-primary-dark">
-                    {contact.name.charAt(0)}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">
-                      {contact.name}
-                    </span>
-                    <span className="block text-sm text-text-muted">
-                      {contact.kind === "supplier" ? "সাপ্লায়ার" : "কাস্টমার"}
-                      {contact.phone && ` · ${contact.phone}`}
-                    </span>
-                  </span>
-                  <BalanceAmount balance={contact.balance} withLabel />
-                </Link>
+          <ul className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            {BADGES.map(({ icon: Icon, label }) => (
+              <li
+                key={label}
+                className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-semibold"
+              >
+                <Icon size={16} className="text-primary" aria-hidden />
+                {label}
               </li>
             ))}
           </ul>
-        )}
+        </section>
+
+        {/* Features */}
+        <section className="grid gap-3 py-6 sm:grid-cols-2">
+          {FEATURES.map(({ icon: Icon, title, body }) => (
+            <div
+              key={title}
+              className="flex gap-3 rounded-2xl border border-border bg-surface p-4"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary-dark">
+                <Icon size={20} aria-hidden />
+              </div>
+              <div>
+                <h2 className="font-bold">{title}</h2>
+                <p className="mt-1 text-sm text-text-muted">{body}</p>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* Why */}
+        <section className="my-6 rounded-2xl border border-border bg-surface p-6 text-center">
+          <h2 className="text-xl font-bold">কেন ওপেনখাতা?</h2>
+          <p className="mx-auto mt-3 max-w-xl text-text-muted">
+            বিদ্যমান অ্যাপগুলো proprietary, বিজ্ঞাপন-ভরা, আর ডেটা lock-in করে
+            রাখে। ওপেনখাতা কমিউনিটি-মালিকানাধীন — কোডটা সবার, চিরকাল ফ্রি।
+          </p>
+          <Link
+            href="/app"
+            className="mt-6 inline-flex min-h-tap items-center justify-center gap-2 rounded-2xl border border-primary px-6 font-bold text-primary hover:bg-primary-light"
+          >
+            এখনই শুরু করুন
+            <ArrowRight size={18} aria-hidden />
+          </Link>
+        </section>
       </main>
 
-      <Link
-        href="/contact-form"
-        className="fixed bottom-5 left-1/2 flex min-h-tap w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center rounded-2xl bg-primary text-lg font-bold text-white shadow-lg hover:bg-primary-dark"
-      >
-        + নতুন কাস্টমার/সাপ্লায়ার
-      </Link>
-
-      {/* Invisible prefetch targets so every screen's chunks land in the
-          service-worker cache from the first online visit (offline-first). */}
-      <nav aria-hidden className="hidden">
-        <Link href="/contact">contact</Link>
-        <Link href="/entry">entry</Link>
-        <Link href="/login">login</Link>
-        <Link href="/reports">reports</Link>
-        <Link href="/offline">offline</Link>
-      </nav>
+      <footer className="flex flex-col items-center gap-2 py-8 text-center text-sm text-text-muted">
+        <a
+          href={REPO_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 hover:text-text"
+        >
+          <Github size={16} aria-hidden />
+          GitHub-এ কোড দেখুন
+        </a>
+        <p>MIT লাইসেন্স · সবার জন্য ফ্রি</p>
+      </footer>
     </div>
   );
 }

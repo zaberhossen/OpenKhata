@@ -5,6 +5,7 @@ import { useAllData } from "@/hooks/use-all-data";
 import { todayISODate } from "@/lib/dates";
 import { formatTaka } from "@/lib/money";
 import {
+  breakdownByMethod,
   downloadFile,
   inRange,
   presetRange,
@@ -13,6 +14,7 @@ import {
   toCsv,
   type RangePreset,
 } from "@/lib/reports";
+import { Download, Printer } from "lucide-react";
 import { BackLink, ScreenLoading } from "@/components/ledger/shared";
 
 const PRESETS: { value: RangePreset; label: string }[] = [
@@ -33,6 +35,7 @@ export default function ReportsPage() {
     [data, range],
   );
   const summary = useMemo(() => summarize(filtered), [filtered]);
+  const byMethod = useMemo(() => breakdownByMethod(filtered), [filtered]);
 
   // Per-contact net within the range, biggest receivable first.
   const perContact = useMemo(() => {
@@ -70,7 +73,7 @@ export default function ReportsPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8">
       <header className="flex items-center gap-2 py-3 print:hidden">
-        <BackLink href="/" />
+        <BackLink href="/app" />
         <h1 className="text-lg font-bold">রিপোর্ট</h1>
       </header>
 
@@ -165,22 +168,54 @@ export default function ReportsPage() {
         </section>
       )}
 
+      {byMethod.length > 0 && (
+        <section className="mt-4">
+          <h2 className="mb-2 text-sm font-semibold text-text-muted">
+            মাধ্যম অনুযায়ী
+          </h2>
+          <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
+            {byMethod.map((row) => (
+              <li
+                key={row.method}
+                className="flex items-center justify-between gap-3 px-4 py-3"
+              >
+                <span className="truncate">{row.label}</span>
+                <span className="flex shrink-0 items-center gap-3 text-sm font-semibold">
+                  {row.got > 0 && (
+                    <span className="text-got">
+                      পেলাম {formatTaka(row.got)}
+                    </span>
+                  )}
+                  {row.gave > 0 && (
+                    <span className="text-gave">
+                      দিলাম {formatTaka(row.gave)}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <div className="mt-6 grid grid-cols-2 gap-3 print:hidden">
         <button
           type="button"
           onClick={exportCsv}
           disabled={filtered.length === 0}
-          className="min-h-tap rounded-2xl border border-border font-semibold text-text hover:bg-background disabled:opacity-40"
+          className="flex min-h-tap items-center justify-center gap-2 rounded-2xl border border-border font-semibold text-text hover:bg-background disabled:opacity-40"
         >
-          ⬇️ CSV
+          <Download size={18} aria-hidden />
+          CSV
         </button>
         <button
           type="button"
           onClick={() => window.print()}
           disabled={filtered.length === 0}
-          className="min-h-tap rounded-2xl border border-border font-semibold text-text hover:bg-background disabled:opacity-40"
+          className="flex min-h-tap items-center justify-center gap-2 rounded-2xl border border-border font-semibold text-text hover:bg-background disabled:opacity-40"
         >
-          🖨️ প্রিন্ট / PDF
+          <Printer size={18} aria-hidden />
+          প্রিন্ট / PDF
         </button>
       </div>
     </div>

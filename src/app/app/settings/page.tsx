@@ -7,6 +7,10 @@ import { signOutKeepingData, syncNow } from "@/lib/sync";
 import { useAuthUser, useSyncStatus } from "@/hooks/use-sync";
 import { useContactsWithBalances } from "@/hooks/use-ledger";
 import { formatTaka } from "@/lib/money";
+import { Check, Wallet } from "lucide-react";
+import { PaymentAccountsForm } from "@/components/ledger/payment-accounts-form";
+import { DriveBackup } from "@/components/ledger/drive-backup";
+import { ReferralCard } from "@/components/ledger/referral-card";
 import {
   notificationPermission,
   requestNotificationPermission,
@@ -21,7 +25,7 @@ const STATE_LABELS: Record<string, string> = {
   syncing: "সিংক হচ্ছে…",
   pending: "কিছু পরিবর্তন ব্যাকআপের অপেক্ষায়",
   error: "সিংকে সমস্যা হয়েছে — আবার চেষ্টা করুন",
-  synced: "সব ডেটা ব্যাকআপ হয়ে আছে ✓",
+  synced: "সব ডেটা ব্যাকআপ হয়ে আছে",
 };
 
 function formatTimestamp(iso: string): string {
@@ -77,7 +81,7 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4">
       <header className="flex items-center gap-2 py-3">
-        <BackLink href="/" />
+        <BackLink href="/app" />
         <h1 className="text-lg font-bold">সেটিংস ও ব্যাকআপ</h1>
       </header>
 
@@ -136,7 +140,7 @@ export default function SettingsPage() {
           </>
         ) : (
           <Link
-            href="/login"
+            href="/app/login"
             className="flex min-h-tap items-center justify-center rounded-2xl bg-primary text-lg font-bold text-white shadow-lg hover:bg-primary-dark"
           >
             লগইন করে ব্যাকআপ চালু করুন
@@ -150,8 +154,9 @@ export default function SettingsPage() {
               এই ব্রাউজারে নোটিফিকেশন সমর্থিত নয়।
             </p>
           ) : perm === "granted" ? (
-            <p className="mt-1 text-sm text-got">
-              চালু আছে ✓ — অ্যাপ খুললে বাকির সারাংশ দেখাবে।
+            <p className="mt-1 flex items-center gap-1 text-sm text-got">
+              <Check size={15} aria-hidden />
+              চালু আছে — অ্যাপ খুললে বাকির সারাংশ দেখাবে।
             </p>
           ) : perm === "denied" ? (
             <p className="mt-1 text-sm text-text-muted">
@@ -171,6 +176,26 @@ export default function SettingsPage() {
               </button>
             </>
           )}
+        </section>
+
+        <DriveBackup />
+
+        <ReferralCard />
+
+        <section className="rounded-2xl border border-border bg-surface p-4">
+          <h2 className="text-sm text-text-muted">পেমেন্ট নম্বর (QR)</h2>
+          <p className="mt-1 text-sm text-text-muted">
+            আপনার বিকাশ/নগদ নম্বর যোগ করুন। &quot;টাকা নিন&quot; পাতায় QR ও
+            নম্বর দেখিয়ে কাস্টমারের কাছ থেকে টাকা নিতে পারবেন।
+          </p>
+          <PaymentAccountsForm />
+          <Link
+            href="/app/collect"
+            className="mt-3 flex min-h-tap items-center justify-center gap-2 rounded-2xl bg-primary font-bold text-white shadow-lg hover:bg-primary-dark"
+          >
+            <Wallet size={18} aria-hidden />
+            টাকা নিন (QR দেখান)
+          </Link>
         </section>
 
         <section className="rounded-2xl border border-border bg-surface p-4 text-sm text-text-muted">

@@ -1,6 +1,7 @@
 import type { Contact, LedgerEntry } from "./db";
 import { formatTaka } from "./money";
 import { formatDate } from "./dates";
+import { paymentMethodLabel } from "./payments";
 
 /**
  * Sharing is device-native and free: Web Share API where available, with
@@ -43,9 +44,12 @@ export function statementMessage(
   );
   for (const e of ordered) {
     const label = e.type === "gave" ? "দিলাম" : "পেলাম";
-    const note = e.note ? ` (${e.note})` : "";
+    const method = paymentMethodLabel(e.payment_method);
+    // Bundle method + note in one parenthetical: " (বিকাশ · চাল ২ বস্তা)".
+    const detail = [method, e.note].filter(Boolean).join(" · ");
+    const suffix = detail ? ` (${detail})` : "";
     lines.push(
-      `${formatDate(e.entry_date)} — ${label} ${formatTaka(e.amount)}${note}`,
+      `${formatDate(e.entry_date)} — ${label} ${formatTaka(e.amount)}${suffix}`,
     );
   }
   lines.push("");

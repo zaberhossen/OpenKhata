@@ -6,6 +6,8 @@ import { useContactLedger } from "@/hooks/use-ledger";
 import { addEntry } from "@/lib/repo";
 import { parseTaka } from "@/lib/money";
 import { todayISODate } from "@/lib/dates";
+import { ArrowUp, ArrowDown } from "lucide-react";
+import { PAYMENT_METHODS, type PaymentMethod } from "@/lib/payments";
 import { BackLink, ScreenLoading } from "@/components/ledger/shared";
 
 function EntryScreen() {
@@ -18,6 +20,7 @@ function EntryScreen() {
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [entryDate, setEntryDate] = useState(todayISODate);
+  const [method, setMethod] = useState<PaymentMethod | null>(null);
   const [saving, setSaving] = useState(false);
 
   if (!ledger) return <ScreenLoading />;
@@ -43,22 +46,31 @@ function EntryScreen() {
       amount: poisha!,
       note,
       entryDate,
+      paymentMethod: method,
     });
-    router.replace(`/contact?id=${contact.id}`);
+    router.replace(`/app/contact?id=${contact.id}`);
   }
 
   return (
     <>
       <header className="flex items-center gap-2 py-3">
-        <BackLink href={`/contact?id=${contact.id}`} />
+        <BackLink href={`/app/contact?id=${contact.id}`} />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-bold leading-tight">
             {contact.name}
           </h1>
           <p
-            className={`text-sm font-semibold ${gave ? "text-gave" : "text-got"}`}
+            className={`flex items-center gap-1 text-sm font-semibold ${gave ? "text-gave" : "text-got"}`}
           >
-            {gave ? "দিলাম ↑ (বাকি বাড়বে)" : "পেলাম ↓ (বাকি কমবে)"}
+            {gave ? (
+              <>
+                দিলাম <ArrowUp size={14} aria-hidden /> (বাকি বাড়বে)
+              </>
+            ) : (
+              <>
+                পেলাম <ArrowDown size={14} aria-hidden /> (বাকি কমবে)
+              </>
+            )}
           </p>
         </div>
       </header>
@@ -93,6 +105,39 @@ function EntryScreen() {
             className="min-h-tap rounded-2xl border border-border bg-surface px-4 outline-none focus:border-primary"
           />
         </label>
+
+        <fieldset className="flex flex-col gap-1">
+          <legend className="text-sm text-text-muted">
+            {gave ? "কীভাবে দিলেন?" : "কীভাবে পেলেন?"} (ঐচ্ছিক)
+          </legend>
+          <div className="mt-1 flex flex-wrap gap-2">
+            {PAYMENT_METHODS.map((m) => {
+              const selected = method === m.value;
+              return (
+                <button
+                  key={m.value}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() =>
+                    setMethod((cur) => (cur === m.value ? null : m.value))
+                  }
+                  className={`flex min-h-tap items-center gap-1.5 rounded-2xl border px-4 text-sm font-semibold ${
+                    selected
+                      ? "border-primary bg-primary-light text-primary-dark"
+                      : "border-border bg-surface text-text-muted"
+                  }`}
+                >
+                  <m.Icon
+                    size={16}
+                    aria-hidden
+                    style={m.color ? { color: m.color } : undefined}
+                  />
+                  {m.label}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
 
         <label className="flex flex-col gap-1">
           <span className="text-sm text-text-muted">তারিখ</span>

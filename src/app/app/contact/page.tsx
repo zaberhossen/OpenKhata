@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { Bell, Share2, ScrollText, X, ArrowUp, ArrowDown } from "lucide-react";
 import { useContactLedger } from "@/hooks/use-ledger";
 import { deleteEntry } from "@/lib/repo";
 import { formatTaka } from "@/lib/money";
 import { formatDate } from "@/lib/dates";
+import { paymentMethodInfo } from "@/lib/payments";
 import { reminderMessage, statementMessage } from "@/lib/share";
 import {
   BackLink,
@@ -26,7 +28,7 @@ function ContactScreen() {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-3 py-16 text-center">
         <p className="font-semibold">কাস্টমার পাওয়া যায়নি</p>
-        <Link href="/" className="text-primary underline underline-offset-2">
+        <Link href="/app" className="text-primary underline underline-offset-2">
           তালিকায় ফিরে যান
         </Link>
       </div>
@@ -38,7 +40,7 @@ function ContactScreen() {
   return (
     <>
       <header className="flex items-center gap-2 py-3">
-        <BackLink href="/" />
+        <BackLink href="/app" />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-bold leading-tight">
             {contact.name}
@@ -49,7 +51,7 @@ function ContactScreen() {
           </p>
         </div>
         <Link
-          href={`/contact-form?id=${contact.id}`}
+          href={`/app/contact-form?id=${contact.id}`}
           className="flex min-h-tap items-center rounded-full px-4 text-sm font-semibold text-primary hover:bg-primary-light"
         >
           সম্পাদনা
@@ -76,16 +78,26 @@ function ContactScreen() {
               title={`${contact.name}-কে রিমাইন্ডার`}
               message={reminderMessage(contact, balance)}
               phone={contact.phone}
-              triggerLabel="🔔 রিমাইন্ডার পাঠান"
-              triggerClassName="flex min-h-tap items-center justify-center rounded-2xl border border-primary font-semibold text-primary hover:bg-primary-light"
+              triggerLabel={
+                <>
+                  <Bell size={18} aria-hidden />
+                  রিমাইন্ডার পাঠান
+                </>
+              }
+              triggerClassName="flex min-h-tap items-center justify-center gap-2 rounded-2xl border border-primary font-semibold text-primary hover:bg-primary-light"
             />
           )}
           <ShareSheet
             title={`${contact.name} — হিসাব`}
             message={statementMessage(contact, entries, balance)}
             phone={contact.phone}
-            triggerLabel="📤 হিসাব শেয়ার"
-            triggerClassName={`flex min-h-tap items-center justify-center rounded-2xl border border-border font-semibold text-text hover:bg-background ${
+            triggerLabel={
+              <>
+                <Share2 size={18} aria-hidden />
+                হিসাব শেয়ার
+              </>
+            }
+            triggerClassName={`flex min-h-tap items-center justify-center gap-2 rounded-2xl border border-border font-semibold text-text hover:bg-background ${
               balance > 0 ? "" : "col-span-2"
             }`}
           />
@@ -95,7 +107,7 @@ function ContactScreen() {
       <main className="mt-4 flex flex-1 flex-col pb-28">
         {entries.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 text-center">
-            <span className="text-4xl">🧾</span>
+            <ScrollText size={40} className="text-text-muted" aria-hidden />
             <p className="font-semibold">এখনো কোনো লেনদেন নেই</p>
             <p className="text-sm text-text-muted">
               নিচের দিলাম/পেলাম বোতাম দিয়ে শুরু করুন
@@ -106,8 +118,21 @@ function ContactScreen() {
             {entries.map((entry) => (
               <li key={entry.id} className="flex items-center gap-3 px-4 py-3">
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-text-muted">
+                  <p className="flex items-center gap-1.5 text-sm text-text-muted">
                     {formatDate(entry.entry_date)}
+                    {(() => {
+                      const m = paymentMethodInfo(entry.payment_method);
+                      return m ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-background px-2 py-0.5 text-xs font-medium text-text">
+                          <m.Icon
+                            size={13}
+                            aria-hidden
+                            style={m.color ? { color: m.color } : undefined}
+                          />
+                          {m.label}
+                        </span>
+                      ) : null;
+                    })()}
                   </p>
                   {entry.note && <p className="truncate">{entry.note}</p>}
                 </div>
@@ -129,7 +154,7 @@ function ContactScreen() {
                   }}
                   className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-text-muted hover:bg-gave-light hover:text-gave"
                 >
-                  ✕
+                  <X size={16} aria-hidden />
                 </button>
               </li>
             ))}
@@ -139,16 +164,16 @@ function ContactScreen() {
 
       <div className="fixed bottom-0 left-1/2 grid w-full max-w-md -translate-x-1/2 grid-cols-2 gap-3 bg-background/95 p-4">
         <Link
-          href={`/entry?contact=${contact.id}&type=gave`}
-          className="flex min-h-tap items-center justify-center rounded-2xl bg-gave py-3 text-lg font-bold text-white shadow-lg hover:opacity-90"
+          href={`/app/entry?contact=${contact.id}&type=gave`}
+          className="flex min-h-tap items-center justify-center gap-1 rounded-2xl bg-gave py-3 text-lg font-bold text-white shadow-lg hover:opacity-90"
         >
-          দিলাম ↑
+          দিলাম <ArrowUp size={20} aria-hidden />
         </Link>
         <Link
-          href={`/entry?contact=${contact.id}&type=got`}
-          className="flex min-h-tap items-center justify-center rounded-2xl bg-got py-3 text-lg font-bold text-white shadow-lg hover:opacity-90"
+          href={`/app/entry?contact=${contact.id}&type=got`}
+          className="flex min-h-tap items-center justify-center gap-1 rounded-2xl bg-got py-3 text-lg font-bold text-white shadow-lg hover:opacity-90"
         >
-          পেলাম ↓
+          পেলাম <ArrowDown size={20} aria-hidden />
         </Link>
       </div>
     </>

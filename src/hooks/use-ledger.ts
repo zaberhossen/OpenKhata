@@ -3,6 +3,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Contact, type LedgerEntry } from "@/lib/db";
 import { entrySign } from "@/lib/repo";
+import type { PaymentAccount } from "@/lib/payments";
 
 export interface ContactWithBalance extends Contact {
   balance: number; // poisha; >0 পাবো, <0 দেবো
@@ -51,6 +52,17 @@ export function useContactsWithBalances():
     }
 
     return { contacts: withBalances, totals };
+  }, []);
+}
+
+/**
+ * The default business's payment accounts (Phase 4). `undefined` while
+ * loading, `[]` once loaded when none are set.
+ */
+export function usePaymentAccounts(): PaymentAccount[] | undefined {
+  return useLiveQuery(async () => {
+    const business = await db.businesses.filter((b) => !b.deleted_at).first();
+    return business?.payment_accounts ?? [];
   }, []);
 }
 

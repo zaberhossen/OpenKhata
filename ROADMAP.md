@@ -87,8 +87,8 @@ Local ডেটাকে cloud-এর সাথে জোড়া দেওয�
 
 সবচেয়ে কঠিন অংশ — PSP/bank integration লাগে, individual/OSS scope-এ সীমাবদ্ধ।
 
-- [ ] **Step 1 (easy):** "Record payment manually" — cash/bKash/Nagad কোন মাধ্যমে পেল, শুধু tag করা
-- [ ] **Step 2:** QR — static merchant QR দেখানো (নিজের bKash/Nagad number)
+- [x] **Step 1 (easy):** "Record payment manually" — cash/bKash/Nagad কোন মাধ্যমে পেল, শুধু tag করা
+- [x] **Step 2:** QR — static merchant QR দেখানো (নিজের bKash/Nagad number)
 - [ ] **Step 3 (advanced):** bKash/Nagad merchant API integration — payment auto-confirm
 - [ ] Payment reconciliation with ledger entries
 
@@ -107,6 +107,18 @@ Core stable হলে তারপর, অথবা contributor-দের জন
 - [ ] Digital storefront (Khatabook-এর "MyStore" ধাঁচে)
 - [ ] Staff/multi-user access with roles
 - [ ] Loan eligibility view (partner-driven, অনেক পরে)
+
+---
+
+## Growth & Polish (post-v1, চলমান)
+
+Core ledger stable — এখন adoption ও পরিচিতির কাজ:
+
+- [x] Promotional landing page (`/`) — app টা `/app`-এ সরানো হয়েছে
+- [x] আইকন লাইব্রেরি (lucide-react) — emoji বদলে consistent UI
+- [x] Auth: Google sign-in + email magic link (phone OTP secondary)
+- [x] Google Drive ব্যাকআপ — user-owned full snapshot (Supabase sync-এর পাশাপাশি)
+- [x] রেফারেল সিস্টেম — share code + "সমর্থক" ব্যাজ (cosmetic)
 
 ---
 
