@@ -28,6 +28,22 @@ export const PAYMENT_METHODS: PaymentMethodInfo[] = [
   { value: "other", label: "অন্যান্য", icon: "🏷️" },
 ];
 
+/**
+ * A merchant's own payment account — the number a customer sends money to.
+ * Stored on the business (Phase 4, Step 2). "cash" is meaningless here, so
+ * the picker for accounts excludes it.
+ */
+export interface PaymentAccount {
+  method: PaymentMethod;
+  /** The bKash/Nagad/… number or bank account, as the merchant typed it. */
+  number: string;
+}
+
+/** Methods that make sense as a *collectable* account (cash can't have a QR). */
+export const ACCOUNT_METHODS = PAYMENT_METHODS.filter(
+  (m) => m.value !== "cash" && m.value !== "other",
+);
+
 const BY_VALUE = new Map(PAYMENT_METHODS.map((m) => [m.value, m]));
 
 /** Info for a stored method, or null for a missing/unknown value. */

@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import type { PaymentMethod } from "./payments";
+import type { PaymentAccount, PaymentMethod } from "./payments";
 
 export type ContactKind = "customer" | "supplier";
 export type EntryType = "got" | "gave";
@@ -12,6 +12,8 @@ export type EntryType = "got" | "gave";
 export interface Business {
   id: string;
   name: string;
+  /** Merchant's own payment accounts shown as QR/number (Phase 4). */
+  payment_accounts: PaymentAccount[] | null;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
@@ -103,6 +105,24 @@ class OpenKhataDB extends Dexie {
           .toCollection()
           .modify((t) => {
             if (t.payment_method === undefined) t.payment_method = null;
+          }),
+      );
+    // v4 adds Business.payment_accounts (Phase 4, Step 2). Not indexed; the
+    // upgrade backfills null so every business row matches the type.
+    this.version(4)
+      .stores({
+        businesses: "id, updated_at",
+        contacts: "id, business_id, name, updated_at",
+        transactions: "id, contact_id, business_id, entry_date, updated_at",
+        outbox: "id, table, queued_at",
+        meta: "key",
+      })
+      .upgrade((tx) =>
+        tx
+          .table("businesses")
+          .toCollection()
+          .modify((b) => {
+            if (b.payment_accounts === undefined) b.payment_accounts = null;
           }),
       );
   }

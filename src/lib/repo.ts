@@ -5,7 +5,7 @@ import {
   type EntryType,
   type SyncedTable,
 } from "./db";
-import type { PaymentMethod } from "./payments";
+import type { PaymentAccount, PaymentMethod } from "./payments";
 import { newId, nowISO } from "./ids";
 
 const DEFAULT_BUSINESS_NAME = "আমার ব্যবসা";
@@ -37,12 +37,34 @@ export async function ensureDefaultBusiness(): Promise<string> {
     await db.businesses.add({
       id,
       name: DEFAULT_BUSINESS_NAME,
+      payment_accounts: null,
       created_at: now,
       updated_at: now,
       deleted_at: null,
     });
     await enqueue("businesses", id);
     return id;
+  });
+}
+
+/**
+ * Replace the merchant's payment accounts (Phase 4, Step 2). Empty numbers are
+ * dropped; an empty list is stored as null. Touches updated_at so the change
+ * syncs like any other write.
+ */
+export async function setPaymentAccounts(
+  accounts: PaymentAccount[],
+): Promise<void> {
+  const cleaned = accounts
+    .map((a) => ({ method: a.method, number: a.number.trim() }))
+    .filter((a) => a.number.length > 0);
+  await db.transaction("rw", db.businesses, db.outbox, async () => {
+    const id = await ensureDefaultBusiness();
+    await db.businesses.update(id, {
+      payment_accounts: cleaned.length > 0 ? cleaned : null,
+      updated_at: nowISO(),
+    });
+    await enqueue("businesses", id);
   });
 }
 

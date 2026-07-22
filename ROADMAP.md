@@ -88,7 +88,7 @@ Local ডেটাকে cloud-এর সাথে জোড়া দেওয�
 সবচেয়ে কঠিন অংশ — PSP/bank integration লাগে, individual/OSS scope-এ সীমাবদ্ধ।
 
 - [x] **Step 1 (easy):** "Record payment manually" — cash/bKash/Nagad কোন মাধ্যমে পেল, শুধু tag করা
-- [ ] **Step 2:** QR — static merchant QR দেখানো (নিজের bKash/Nagad number)
+- [x] **Step 2:** QR — static merchant QR দেখানো (নিজের bKash/Nagad number)
 - [ ] **Step 3 (advanced):** bKash/Nagad merchant API integration — payment auto-confirm
 - [ ] Payment reconciliation with ledger entries
 

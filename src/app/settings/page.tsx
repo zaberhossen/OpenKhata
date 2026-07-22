@@ -7,6 +7,7 @@ import { signOutKeepingData, syncNow } from "@/lib/sync";
 import { useAuthUser, useSyncStatus } from "@/hooks/use-sync";
 import { useContactsWithBalances } from "@/hooks/use-ledger";
 import { formatTaka } from "@/lib/money";
+import { PaymentAccountsForm } from "@/components/ledger/payment-accounts-form";
 import {
   notificationPermission,
   requestNotificationPermission,
@@ -171,6 +172,21 @@ export default function SettingsPage() {
               </button>
             </>
           )}
+        </section>
+
+        <section className="rounded-2xl border border-border bg-surface p-4">
+          <h2 className="text-sm text-text-muted">পেমেন্ট নম্বর (QR)</h2>
+          <p className="mt-1 text-sm text-text-muted">
+            আপনার বিকাশ/নগদ নম্বর যোগ করুন। &quot;টাকা নিন&quot; পাতায় QR ও
+            নম্বর দেখিয়ে কাস্টমারের কাছ থেকে টাকা নিতে পারবেন।
+          </p>
+          <PaymentAccountsForm />
+          <Link
+            href="/collect"
+            className="mt-3 flex min-h-tap items-center justify-center rounded-2xl bg-primary font-bold text-white shadow-lg hover:bg-primary-dark"
+          >
+            💳 টাকা নিন (QR দেখান)
+          </Link>
         </section>
 
         <section className="rounded-2xl border border-border bg-surface p-4 text-sm text-text-muted">
