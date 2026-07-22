@@ -72,7 +72,7 @@ export default function ReportsPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8">
       <header className="flex items-center gap-2 py-3 print:hidden">
-        <BackLink href="/" />
+        <BackLink href="/app" />
         <h1 className="text-lg font-bold">রিপোর্ট</h1>
       </header>
 

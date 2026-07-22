@@ -27,7 +27,7 @@ function ContactScreen() {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-3 py-16 text-center">
         <p className="font-semibold">কাস্টমার পাওয়া যায়নি</p>
-        <Link href="/" className="text-primary underline underline-offset-2">
+        <Link href="/app" className="text-primary underline underline-offset-2">
           তালিকায় ফিরে যান
         </Link>
       </div>
@@ -39,7 +39,7 @@ function ContactScreen() {
   return (
     <>
       <header className="flex items-center gap-2 py-3">
-        <BackLink href="/" />
+        <BackLink href="/app" />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-bold leading-tight">
             {contact.name}
@@ -50,7 +50,7 @@ function ContactScreen() {
           </p>
         </div>
         <Link
-          href={`/contact-form?id=${contact.id}`}
+          href={`/app/contact-form?id=${contact.id}`}
           className="flex min-h-tap items-center rounded-full px-4 text-sm font-semibold text-primary hover:bg-primary-light"
         >
           সম্পাদনা
@@ -149,13 +149,13 @@ function ContactScreen() {
 
       <div className="fixed bottom-0 left-1/2 grid w-full max-w-md -translate-x-1/2 grid-cols-2 gap-3 bg-background/95 p-4">
         <Link
-          href={`/entry?contact=${contact.id}&type=gave`}
+          href={`/app/entry?contact=${contact.id}&type=gave`}
           className="flex min-h-tap items-center justify-center rounded-2xl bg-gave py-3 text-lg font-bold text-white shadow-lg hover:opacity-90"
         >
           দিলাম ↑
         </Link>
         <Link
-          href={`/entry?contact=${contact.id}&type=got`}
+          href={`/app/entry?contact=${contact.id}&type=got`}
           className="flex min-h-tap items-center justify-center rounded-2xl bg-got py-3 text-lg font-bold text-white shadow-lg hover:opacity-90"
         >
           পেলাম ↓

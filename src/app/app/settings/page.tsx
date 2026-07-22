@@ -78,7 +78,7 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4">
       <header className="flex items-center gap-2 py-3">
-        <BackLink href="/" />
+        <BackLink href="/app" />
         <h1 className="text-lg font-bold">সেটিংস ও ব্যাকআপ</h1>
       </header>
 
@@ -137,7 +137,7 @@ export default function SettingsPage() {
           </>
         ) : (
           <Link
-            href="/login"
+            href="/app/login"
             className="flex min-h-tap items-center justify-center rounded-2xl bg-primary text-lg font-bold text-white shadow-lg hover:bg-primary-dark"
           >
             লগইন করে ব্যাকআপ চালু করুন
@@ -182,7 +182,7 @@ export default function SettingsPage() {
           </p>
           <PaymentAccountsForm />
           <Link
-            href="/collect"
+            href="/app/collect"
             className="mt-3 flex min-h-tap items-center justify-center rounded-2xl bg-primary font-bold text-white shadow-lg hover:bg-primary-dark"
           >
             💳 টাকা নিন (QR দেখান)

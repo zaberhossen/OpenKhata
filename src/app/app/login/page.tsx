@@ -30,7 +30,7 @@ export default function LoginPage() {
     return (
       <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4">
         <header className="flex items-center gap-2 py-3">
-          <BackLink href="/" />
+          <BackLink href="/app" />
           <h1 className="text-lg font-bold">লগইন</h1>
         </header>
         <div className="flex flex-1 flex-col items-center justify-center gap-3 pb-24 text-center">
@@ -78,7 +78,7 @@ export default function LoginPage() {
       setError(err.message);
       return;
     }
-    router.replace("/settings");
+    router.replace("/app/settings");
   }
 
   return (
@@ -184,7 +184,7 @@ export default function LoginPage() {
               : "যাচাই করুন"}
         </button>
         <Link
-          href="/"
+          href="/app"
           className="mt-2 flex min-h-tap items-center justify-center text-sm text-text-muted underline underline-offset-2"
         >
           পরে করবো — অফলাইনেই চালিয়ে যান

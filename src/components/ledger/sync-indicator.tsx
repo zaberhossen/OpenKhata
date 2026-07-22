@@ -29,7 +29,7 @@ export function SyncIndicator() {
 
   return (
     <Link
-      href="/settings"
+      href="/app/settings"
       aria-label={TITLES[state]}
       title={TITLES[state]}
       className="relative flex min-h-tap min-w-tap items-center justify-center rounded-full text-2xl hover:bg-border/50"

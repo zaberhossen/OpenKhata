@@ -40,10 +40,10 @@ function ContactFormScreen() {
     setSaving(true);
     if (editing) {
       await updateContact(editing.id, { name, phone, kind });
-      router.replace(`/contact?id=${editing.id}`);
+      router.replace(`/app/contact?id=${editing.id}`);
     } else {
       const id = await addContact({ name, phone, kind });
-      router.replace(`/contact?id=${id}`);
+      router.replace(`/app/contact?id=${id}`);
     }
   }
 
@@ -58,7 +58,7 @@ function ContactFormScreen() {
     }
     setSaving(true);
     await deleteContact(editing.id);
-    router.replace("/");
+    router.replace("/app");
   }
 
   return (

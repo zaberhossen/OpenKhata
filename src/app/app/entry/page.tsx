@@ -47,13 +47,13 @@ function EntryScreen() {
       entryDate,
       paymentMethod: method,
     });
-    router.replace(`/contact?id=${contact.id}`);
+    router.replace(`/app/contact?id=${contact.id}`);
   }
 
   return (
     <>
       <header className="flex items-center gap-2 py-3">
-        <BackLink href={`/contact?id=${contact.id}`} />
+        <BackLink href={`/app/contact?id=${contact.id}`} />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-bold leading-tight">
             {contact.name}

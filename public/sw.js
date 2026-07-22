@@ -5,18 +5,20 @@
  * Workbox-generated worker once the ledger (Phase 1) needs finer-grained
  * caching strategies.
  */
-const VERSION = "v4";
+const VERSION = "v5";
 const PRECACHE = `openkhata-precache-${VERSION}`;
 const RUNTIME = `openkhata-runtime-${VERSION}`;
 
 const PRECACHE_URLS = [
-  "/",
-  "/contact",
-  "/entry",
-  "/contact-form",
-  "/login",
-  "/settings",
-  "/reports",
+  "/", // promotional landing
+  "/app",
+  "/app/contact",
+  "/app/entry",
+  "/app/contact-form",
+  "/app/login",
+  "/app/settings",
+  "/app/reports",
+  "/app/collect",
   "/offline",
   "/manifest.webmanifest",
   "/fonts/noto-sans-bengali-bengali.woff2",
@@ -59,7 +61,7 @@ self.addEventListener("notificationclick", (event) => {
         for (const client of clients) {
           if ("focus" in client) return client.focus();
         }
-        return self.clients.openWindow("/");
+        return self.clients.openWindow("/app");
       }),
   );
 });

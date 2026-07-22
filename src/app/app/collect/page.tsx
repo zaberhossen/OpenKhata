@@ -38,7 +38,7 @@ export default function CollectPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8">
       <header className="flex items-center gap-2 py-3 print:hidden">
-        <BackLink href="/" />
+        <BackLink href="/app" />
         <h1 className="text-lg font-bold">টাকা নিন</h1>
       </header>
 
@@ -53,7 +53,7 @@ export default function CollectPage() {
             স্ক্যান করে টাকা পাঠাতে পারবেন।
           </p>
           <Link
-            href="/settings"
+            href="/app/settings"
             className="mt-2 flex min-h-tap items-center justify-center rounded-2xl bg-primary px-6 font-bold text-white shadow-lg hover:bg-primary-dark"
           >
             নম্বর যোগ করুন
@@ -97,7 +97,7 @@ export default function CollectPage() {
           </p>
 
           <Link
-            href="/settings"
+            href="/app/settings"
             className="min-h-tap rounded-2xl border border-border text-center font-semibold leading-[3rem] text-text hover:bg-background"
           >
             নম্বর সম্পাদনা করুন
