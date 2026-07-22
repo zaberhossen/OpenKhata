@@ -9,6 +9,7 @@ import { useContactsWithBalances } from "@/hooks/use-ledger";
 import { formatTaka } from "@/lib/money";
 import { Check, Wallet } from "lucide-react";
 import { PaymentAccountsForm } from "@/components/ledger/payment-accounts-form";
+import { DriveBackup } from "@/components/ledger/drive-backup";
 import {
   notificationPermission,
   requestNotificationPermission,
@@ -175,6 +176,8 @@ export default function SettingsPage() {
             </>
           )}
         </section>
+
+        <DriveBackup />
 
         <section className="rounded-2xl border border-border bg-surface p-4">
           <h2 className="text-sm text-text-muted">পেমেন্ট নম্বর (QR)</h2>
