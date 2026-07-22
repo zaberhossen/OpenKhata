@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Settings } from "lucide-react";
 import { useSyncStatus, type SyncState } from "@/hooks/use-sync";
 
 const DOT_CLASSES: Record<SyncState, string> = {
@@ -32,9 +33,9 @@ export function SyncIndicator() {
       href="/app/settings"
       aria-label={TITLES[state]}
       title={TITLES[state]}
-      className="relative flex min-h-tap min-w-tap items-center justify-center rounded-full text-2xl hover:bg-border/50"
+      className="relative flex min-h-tap min-w-tap items-center justify-center rounded-full hover:bg-border/50"
     >
-      ⚙️
+      <Settings size={24} aria-hidden />
       {state !== "disabled" && (
         <span
           aria-hidden

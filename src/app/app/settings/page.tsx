@@ -7,6 +7,7 @@ import { signOutKeepingData, syncNow } from "@/lib/sync";
 import { useAuthUser, useSyncStatus } from "@/hooks/use-sync";
 import { useContactsWithBalances } from "@/hooks/use-ledger";
 import { formatTaka } from "@/lib/money";
+import { Check, Wallet } from "lucide-react";
 import { PaymentAccountsForm } from "@/components/ledger/payment-accounts-form";
 import {
   notificationPermission,
@@ -22,7 +23,7 @@ const STATE_LABELS: Record<string, string> = {
   syncing: "সিংক হচ্ছে…",
   pending: "কিছু পরিবর্তন ব্যাকআপের অপেক্ষায়",
   error: "সিংকে সমস্যা হয়েছে — আবার চেষ্টা করুন",
-  synced: "সব ডেটা ব্যাকআপ হয়ে আছে ✓",
+  synced: "সব ডেটা ব্যাকআপ হয়ে আছে",
 };
 
 function formatTimestamp(iso: string): string {
@@ -151,8 +152,9 @@ export default function SettingsPage() {
               এই ব্রাউজারে নোটিফিকেশন সমর্থিত নয়।
             </p>
           ) : perm === "granted" ? (
-            <p className="mt-1 text-sm text-got">
-              চালু আছে ✓ — অ্যাপ খুললে বাকির সারাংশ দেখাবে।
+            <p className="mt-1 flex items-center gap-1 text-sm text-got">
+              <Check size={15} aria-hidden />
+              চালু আছে — অ্যাপ খুললে বাকির সারাংশ দেখাবে।
             </p>
           ) : perm === "denied" ? (
             <p className="mt-1 text-sm text-text-muted">
@@ -183,9 +185,10 @@ export default function SettingsPage() {
           <PaymentAccountsForm />
           <Link
             href="/app/collect"
-            className="mt-3 flex min-h-tap items-center justify-center rounded-2xl bg-primary font-bold text-white shadow-lg hover:bg-primary-dark"
+            className="mt-3 flex min-h-tap items-center justify-center gap-2 rounded-2xl bg-primary font-bold text-white shadow-lg hover:bg-primary-dark"
           >
-            💳 টাকা নিন (QR দেখান)
+            <Wallet size={18} aria-hidden />
+            টাকা নিন (QR দেখান)
           </Link>
         </section>
 

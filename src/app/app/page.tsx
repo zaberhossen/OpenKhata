@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Wallet, BarChart3, NotebookText } from "lucide-react";
 import { useContactsWithBalances } from "@/hooks/use-ledger";
 import { formatTaka } from "@/lib/money";
 import { BalanceAmount, ScreenLoading } from "@/components/ledger/shared";
@@ -31,17 +32,17 @@ export default function Home() {
           href="/app/collect"
           aria-label="টাকা নিন"
           title="টাকা নিন"
-          className="flex min-h-tap min-w-tap items-center justify-center rounded-full text-2xl hover:bg-border/50"
+          className="flex min-h-tap min-w-tap items-center justify-center rounded-full hover:bg-border/50"
         >
-          💳
+          <Wallet size={24} aria-hidden />
         </Link>
         <Link
           href="/app/reports"
           aria-label="রিপোর্ট"
           title="রিপোর্ট"
-          className="flex min-h-tap min-w-tap items-center justify-center rounded-full text-2xl hover:bg-border/50"
+          className="flex min-h-tap min-w-tap items-center justify-center rounded-full hover:bg-border/50"
         >
-          📊
+          <BarChart3 size={24} aria-hidden />
         </Link>
         <SyncIndicator />
       </header>
@@ -77,7 +78,7 @@ export default function Home() {
           <ScreenLoading />
         ) : filtered!.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 text-center">
-            <span className="text-4xl">📒</span>
+            <NotebookText size={40} className="text-text-muted" aria-hidden />
             <p className="font-semibold">
               {query ? "কাউকে পাওয়া যায়নি" : "খাতা এখনো ফাঁকা"}
             </p>

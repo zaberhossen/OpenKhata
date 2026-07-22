@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CloudOff } from "lucide-react";
 import { getSupabase, isSyncConfigured } from "@/lib/supabase";
 import { BackLink } from "@/components/ledger/shared";
 
@@ -34,7 +35,7 @@ export default function LoginPage() {
           <h1 className="text-lg font-bold">লগইন</h1>
         </header>
         <div className="flex flex-1 flex-col items-center justify-center gap-3 pb-24 text-center">
-          <span className="text-4xl">☁️</span>
+          <CloudOff size={40} className="text-text-muted" aria-hidden />
           <p className="font-semibold">ক্লাউড ব্যাকআপ চালু নেই</p>
           <p className="text-sm text-text-muted">
             এই ডিপ্লয়মেন্টে Supabase কনফিগার করা হয়নি। আপনার সব ডেটা এই ফোনেই

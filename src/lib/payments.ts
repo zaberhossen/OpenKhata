@@ -7,6 +7,14 @@
  * nullable so every existing entry stays valid without migration.
  */
 
+import {
+  Banknote,
+  Smartphone,
+  Landmark,
+  Tag,
+  type LucideIcon,
+} from "lucide-react";
+
 export type PaymentMethod =
   "cash" | "bkash" | "nagad" | "rocket" | "bank" | "other";
 
@@ -14,18 +22,21 @@ export interface PaymentMethodInfo {
   value: PaymentMethod;
   /** Bangla label shown in the UI and shared statements. */
   label: string;
-  /** Emoji used as a compact chip icon. */
-  icon: string;
+  /** Icon shown as a compact chip. lucide has no brand logos, so MFS
+   *  methods share a phone icon distinguished by `color`. */
+  Icon: LucideIcon;
+  /** Optional brand accent colour (hex) for the icon. */
+  color?: string;
 }
 
 /** Display order in the picker. "cash" first — it's the common case. */
 export const PAYMENT_METHODS: PaymentMethodInfo[] = [
-  { value: "cash", label: "ক্যাশ", icon: "💵" },
-  { value: "bkash", label: "বিকাশ", icon: "📱" },
-  { value: "nagad", label: "নগদ", icon: "📲" },
-  { value: "rocket", label: "রকেট", icon: "🚀" },
-  { value: "bank", label: "ব্যাংক", icon: "🏦" },
-  { value: "other", label: "অন্যান্য", icon: "🏷️" },
+  { value: "cash", label: "ক্যাশ", Icon: Banknote },
+  { value: "bkash", label: "বিকাশ", Icon: Smartphone, color: "#e2136e" },
+  { value: "nagad", label: "নগদ", Icon: Smartphone, color: "#f6820d" },
+  { value: "rocket", label: "রকেট", Icon: Smartphone, color: "#8c3494" },
+  { value: "bank", label: "ব্যাংক", Icon: Landmark },
+  { value: "other", label: "অন্যান্য", Icon: Tag },
 ];
 
 /**

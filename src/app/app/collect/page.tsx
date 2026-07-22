@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Wallet, Check } from "lucide-react";
 import { usePaymentAccounts } from "@/hooks/use-ledger";
 import { paymentMethodInfo } from "@/lib/payments";
 import { BackLink, ScreenLoading } from "@/components/ledger/shared";
@@ -27,7 +28,14 @@ function CopyButton({ value }: { value: string }) {
       onClick={copy}
       className="min-h-tap shrink-0 rounded-2xl border border-border px-4 text-sm font-semibold text-primary hover:bg-primary-light"
     >
-      {copied ? "কপি হয়েছে ✓" : "কপি করুন"}
+      {copied ? (
+        <span className="flex items-center gap-1">
+          <Check size={16} aria-hidden />
+          কপি হয়েছে
+        </span>
+      ) : (
+        "কপি করুন"
+      )}
     </button>
   );
 }
@@ -46,7 +54,7 @@ export default function CollectPage() {
         <ScreenLoading />
       ) : accounts.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 py-16 text-center">
-          <span className="text-4xl">💳</span>
+          <Wallet size={40} className="text-text-muted" aria-hidden />
           <p className="font-semibold">কোনো পেমেন্ট নম্বর যোগ করা নেই</p>
           <p className="text-sm text-text-muted">
             আপনার বিকাশ/নগদ নম্বর যোগ করলে এখানে QR দেখানো যাবে, কাস্টমার
@@ -74,7 +82,13 @@ export default function CollectPage() {
                 className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface p-5"
               >
                 <div className="flex items-center gap-2 text-lg font-bold">
-                  <span aria-hidden>{info?.icon}</span>
+                  {info && (
+                    <info.Icon
+                      size={20}
+                      aria-hidden
+                      style={info.color ? { color: info.color } : undefined}
+                    />
+                  )}
                   {info?.label ?? account.method}
                 </div>
                 <QrCode

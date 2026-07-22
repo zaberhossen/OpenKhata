@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { nativeShare, shareTargets } from "@/lib/share";
 
 /**
@@ -18,7 +18,7 @@ export function ShareSheet({
   title: string;
   message: string;
   phone: string;
-  triggerLabel: string;
+  triggerLabel: ReactNode;
   triggerClassName: string;
 }) {
   const [open, setOpen] = useState(false);

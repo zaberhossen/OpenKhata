@@ -14,6 +14,7 @@ import {
   toCsv,
   type RangePreset,
 } from "@/lib/reports";
+import { Download, Printer } from "lucide-react";
 import { BackLink, ScreenLoading } from "@/components/ledger/shared";
 
 const PRESETS: { value: RangePreset; label: string }[] = [
@@ -202,17 +203,19 @@ export default function ReportsPage() {
           type="button"
           onClick={exportCsv}
           disabled={filtered.length === 0}
-          className="min-h-tap rounded-2xl border border-border font-semibold text-text hover:bg-background disabled:opacity-40"
+          className="flex min-h-tap items-center justify-center gap-2 rounded-2xl border border-border font-semibold text-text hover:bg-background disabled:opacity-40"
         >
-          ⬇️ CSV
+          <Download size={18} aria-hidden />
+          CSV
         </button>
         <button
           type="button"
           onClick={() => window.print()}
           disabled={filtered.length === 0}
-          className="min-h-tap rounded-2xl border border-border font-semibold text-text hover:bg-background disabled:opacity-40"
+          className="flex min-h-tap items-center justify-center gap-2 rounded-2xl border border-border font-semibold text-text hover:bg-background disabled:opacity-40"
         >
-          🖨️ প্রিন্ট / PDF
+          <Printer size={18} aria-hidden />
+          প্রিন্ট / PDF
         </button>
       </div>
     </div>

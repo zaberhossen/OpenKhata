@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Check, X } from "lucide-react";
 import { usePaymentAccounts } from "@/hooks/use-ledger";
 import { setPaymentAccounts } from "@/lib/repo";
 import { ACCOUNT_METHODS, type PaymentAccount } from "@/lib/payments";
@@ -85,7 +86,7 @@ export function PaymentAccountsForm() {
             onClick={() => removeRow(i)}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-text-muted hover:bg-gave-light hover:text-gave"
           >
-            ✕
+            <X size={16} aria-hidden />
           </button>
         </div>
       ))}
@@ -101,9 +102,16 @@ export function PaymentAccountsForm() {
       <button
         type="button"
         onClick={save}
-        className="min-h-tap rounded-2xl border border-primary font-semibold text-primary hover:bg-primary-light"
+        className="flex min-h-tap items-center justify-center gap-1.5 rounded-2xl border border-primary font-semibold text-primary hover:bg-primary-light"
       >
-        {saved ? "সংরক্ষিত ✓" : "সংরক্ষণ করুন"}
+        {saved ? (
+          <>
+            <Check size={18} aria-hidden />
+            সংরক্ষিত
+          </>
+        ) : (
+          "সংরক্ষণ করুন"
+        )}
       </button>
     </div>
   );

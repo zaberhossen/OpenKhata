@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { formatTaka } from "@/lib/money";
 
 /** Colored amount with the পাবো/দেবো label implied by sign. */
@@ -34,9 +35,9 @@ export function BackLink({ href }: { href: string }) {
     <Link
       href={href}
       aria-label="ফিরে যান"
-      className="flex min-h-tap min-w-tap items-center justify-center rounded-full text-2xl hover:bg-border/50"
+      className="flex min-h-tap min-w-tap items-center justify-center rounded-full hover:bg-border/50"
     >
-      ←
+      <ArrowLeft size={22} aria-hidden />
     </Link>
   );
 }

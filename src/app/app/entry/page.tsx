@@ -6,6 +6,7 @@ import { useContactLedger } from "@/hooks/use-ledger";
 import { addEntry } from "@/lib/repo";
 import { parseTaka } from "@/lib/money";
 import { todayISODate } from "@/lib/dates";
+import { ArrowUp, ArrowDown } from "lucide-react";
 import { PAYMENT_METHODS, type PaymentMethod } from "@/lib/payments";
 import { BackLink, ScreenLoading } from "@/components/ledger/shared";
 
@@ -59,9 +60,17 @@ function EntryScreen() {
             {contact.name}
           </h1>
           <p
-            className={`text-sm font-semibold ${gave ? "text-gave" : "text-got"}`}
+            className={`flex items-center gap-1 text-sm font-semibold ${gave ? "text-gave" : "text-got"}`}
           >
-            {gave ? "দিলাম ↑ (বাকি বাড়বে)" : "পেলাম ↓ (বাকি কমবে)"}
+            {gave ? (
+              <>
+                দিলাম <ArrowUp size={14} aria-hidden /> (বাকি বাড়বে)
+              </>
+            ) : (
+              <>
+                পেলাম <ArrowDown size={14} aria-hidden /> (বাকি কমবে)
+              </>
+            )}
           </p>
         </div>
       </header>
@@ -118,7 +127,11 @@ function EntryScreen() {
                       : "border-border bg-surface text-text-muted"
                   }`}
                 >
-                  <span aria-hidden>{m.icon}</span>
+                  <m.Icon
+                    size={16}
+                    aria-hidden
+                    style={m.color ? { color: m.color } : undefined}
+                  />
                   {m.label}
                 </button>
               );
