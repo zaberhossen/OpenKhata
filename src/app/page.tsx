@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Logo } from "@/components/brand/logo";
 import {
   WifiOff,
   BadgeDollarSign,
@@ -64,9 +65,7 @@ export default function LandingPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-3xl flex-col px-4">
       <header className="flex items-center gap-3 py-5">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white">
-          খ
-        </div>
+        <Logo className="h-11 w-11 shrink-0" />
         <span className="flex-1 text-lg font-bold">ওপেনখাতা</span>
         <a
           href={REPO_URL}
@@ -82,6 +81,7 @@ export default function LandingPage() {
       <main className="flex flex-1 flex-col">
         {/* Hero */}
         <section className="flex flex-col items-center py-10 text-center sm:py-16">
+          <Logo className="mb-6 h-20 w-20 sm:h-24 sm:w-24" />
           <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
             কাগজের বাকির খাতা ছেড়ে
             <br />

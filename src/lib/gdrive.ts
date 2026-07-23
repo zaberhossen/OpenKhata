@@ -6,24 +6,38 @@ import { BACKUP_FILENAME } from "./backup";
  * talks to the Drive REST API directly. The backup file lives in the hidden,
  * app-scoped `appDataFolder` — only OpenKhata can see it. Requires network;
  * degrades to a clear "not configured" state without a client ID.
+ *
+ * Tokens are cached in memory (~1h) and can be refreshed silently (no popup)
+ * once the user has granted access, which is what makes the automatic,
+ * WhatsApp-style backup possible while the app is open.
  */
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-const SCOPE = "https://www.googleapis.com/auth/drive.appdata";
+// `openid email` lets us show which account is connected; drive.appdata is the
+// backup scope. Adding email is non-sensitive and doesn't change verification.
+const SCOPE = "openid email https://www.googleapis.com/auth/drive.appdata";
 const GIS_SRC = "https://accounts.google.com/gsi/client";
 
 export function isDriveConfigured(): boolean {
   return Boolean(CLIENT_ID);
 }
 
+/** Thrown when a silent token can't be obtained — the user must re-grant. */
+export class NeedsReconnectError extends Error {
+  constructor(message = "Google Drive-এ আবার সংযোগ দিন।") {
+    super(message);
+    this.name = "NeedsReconnectError";
+  }
+}
+
 // Minimal shape of the GIS token client we rely on.
 interface TokenResponse {
   access_token?: string;
+  expires_in?: number;
   error?: string;
 }
 interface TokenClient {
   requestAccessToken: (overrides?: { prompt?: string }) => void;
-  callback: (resp: TokenResponse) => void;
 }
 interface GoogleGis {
   accounts: {
@@ -31,7 +45,9 @@ interface GoogleGis {
       initTokenClient: (config: {
         client_id: string;
         scope: string;
+        prompt?: string;
         callback: (resp: TokenResponse) => void;
+        error_callback?: (err: { type?: string }) => void;
       }) => TokenClient;
     };
   };
@@ -63,9 +79,27 @@ function loadGis(): Promise<void> {
   return gisPromise;
 }
 
-/** Interactive: get a Drive access token (may show a Google consent popup). */
-export async function getAccessToken(): Promise<string> {
+// In-memory access-token cache (never persisted — tokens are short-lived).
+let cachedToken: { value: string; expiresAt: number } | null = null;
+const TOKEN_SKEW_MS = 120_000; // refresh 2 min before expiry
+
+/** Forget the cached token (used on disconnect). */
+export function clearDriveToken(): void {
+  cachedToken = null;
+}
+
+/**
+ * Get a Drive access token. `interactive: true` may show a Google consent
+ * popup (call only from a user gesture). `interactive: false` refreshes
+ * silently and throws `NeedsReconnectError` if consent is required.
+ */
+export async function getAccessToken(
+  { interactive }: { interactive: boolean } = { interactive: true },
+): Promise<string> {
   if (!CLIENT_ID) throw new Error("Google Drive কনফিগার করা নেই।");
+  if (cachedToken && cachedToken.expiresAt - TOKEN_SKEW_MS > Date.now()) {
+    return cachedToken.value;
+  }
   await loadGis();
   return new Promise<string>((resolve, reject) => {
     const client = window.google!.accounts.oauth2.initTokenClient({
@@ -73,14 +107,42 @@ export async function getAccessToken(): Promise<string> {
       scope: SCOPE,
       callback: (resp) => {
         if (resp.error || !resp.access_token) {
-          reject(new Error(resp.error || "টোকেন পাওয়া যায়নি।"));
+          const err = resp.error || "টোকেন পাওয়া যায়নি।";
+          reject(interactive ? new Error(err) : new NeedsReconnectError());
           return;
         }
+        cachedToken = {
+          value: resp.access_token,
+          expiresAt: Date.now() + (resp.expires_in ?? 3600) * 1000,
+        };
         resolve(resp.access_token);
       },
+      // Fires for popup-level failures (e.g. blocked, or silent needs consent).
+      error_callback: () => {
+        reject(
+          interactive
+            ? new Error("Google অনুমতি নেওয়া গেল না।")
+            : new NeedsReconnectError(),
+        );
+      },
     });
-    client.requestAccessToken();
+    // Empty prompt = silent; default = allow the consent UI when needed.
+    client.requestAccessToken(interactive ? {} : { prompt: "" });
   });
+}
+
+/** The signed-in Google account's email (for display), or null. */
+export async function getConnectedEmail(token: string): Promise<string | null> {
+  try {
+    const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return null;
+    const json = (await res.json()) as { email?: string };
+    return json.email ?? null;
+  } catch {
+    return null;
+  }
 }
 
 async function driveFetch(
@@ -107,6 +169,11 @@ async function findBackupId(token: string): Promise<string | null> {
   );
   const json = (await res.json()) as { files?: { id: string }[] };
   return json.files?.[0]?.id ?? null;
+}
+
+/** Whether a backup already exists in the user's Drive appDataFolder. */
+export async function hasRemoteBackup(token: string): Promise<boolean> {
+  return (await findBackupId(token)) !== null;
 }
 
 /** Upload (create or overwrite) the backup content to appDataFolder. */
