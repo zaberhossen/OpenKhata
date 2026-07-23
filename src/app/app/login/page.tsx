@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CloudOff, Mail, Phone, MailCheck } from "lucide-react";
 import { getSupabase, isSyncConfigured } from "@/lib/supabase";
 import { BackLink } from "@/components/ledger/shared";
+import { Logo } from "@/components/brand/logo";
 
 /** "01712345678" -> "+8801712345678" (Bangladesh default); passes +… through. */
 function normalizePhone(input: string): string {
@@ -61,11 +62,21 @@ export default function LoginPage() {
           <h1 className="text-lg font-bold">লগইন</h1>
         </header>
         <div className="flex flex-1 flex-col items-center justify-center gap-3 pb-24 text-center">
-          <CloudOff size={40} className="text-text-muted" aria-hidden />
-          <p className="font-semibold">ক্লাউড ব্যাকআপ চালু নেই</p>
+          <Logo className="h-16 w-16" />
+          <div className="flex items-center gap-2 text-text-muted">
+            <CloudOff size={20} aria-hidden />
+            <p className="font-semibold text-text">লগইন এখনো চালু হয়নি</p>
+          </div>
           <p className="text-sm text-text-muted">
-            এই ডিপ্লয়মেন্টে Supabase কনফিগার করা হয়নি। আপনার সব ডেটা এই ফোনেই
-            নিরাপদে আছে। সেটআপ নির্দেশনা: রিপোর <code>supabase/README.md</code>
+            লগইন ও ক্লাউড ব্যাকআপ চালু করতে এই ডিপ্লয়মেন্টে Supabase কনফিগার
+            করতে হবে। <code>.env.local</code> ফাইলে{" "}
+            <code>NEXT_PUBLIC_SUPABASE_URL</code> ও{" "}
+            <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> যোগ করে অ্যাপ আবার চালু
+            করুন। সেটআপ নির্দেশনা: <code>supabase/README.md</code>
+          </p>
+          <p className="text-sm text-text-muted">
+            ততক্ষণ আপনার সব ডেটা এই ফোনেই নিরাপদে আছে এবং অ্যাপ পুরোপুরি কাজ
+            করে।
           </p>
         </div>
       </div>
@@ -154,10 +165,13 @@ export default function LoginPage() {
       </header>
 
       <main className="flex flex-1 flex-col gap-4 py-2">
-        <p className="text-sm text-text-muted">
-          লগইন করলে আপনার খাতা ক্লাউডে ব্যাকআপ হবে এবং একাধিক ফোনে ব্যবহার করা
-          যাবে। কোনো পাসওয়ার্ড লাগে না।
-        </p>
+        <div className="flex flex-col items-center gap-2 pb-2 text-center">
+          <Logo className="h-16 w-16" />
+          <p className="text-sm text-text-muted">
+            লগইন করলে আপনার খাতা ক্লাউডে ব্যাকআপ হবে এবং একাধিক ফোনে ব্যবহার করা
+            যাবে। কোনো পাসওয়ার্ড লাগে না।
+          </p>
+        </div>
 
         {/* Google */}
         <button

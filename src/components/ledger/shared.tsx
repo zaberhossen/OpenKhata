@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { formatTaka } from "@/lib/money";
+import { Logo } from "@/components/brand/logo";
 
 /** Colored amount with the পাবো/দেবো label implied by sign. */
 export function BalanceAmount({
@@ -44,7 +45,8 @@ export function BackLink({ href }: { href: string }) {
 
 export function ScreenLoading() {
   return (
-    <div className="flex flex-1 items-center justify-center py-20 text-text-muted">
+    <div className="flex flex-1 flex-col items-center justify-center gap-3 py-20 text-text-muted">
+      <Logo className="h-12 w-12 animate-pulse" />
       লোড হচ্ছে…
     </div>
   );

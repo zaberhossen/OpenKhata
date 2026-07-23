@@ -63,3 +63,58 @@ body {
   background-color: rgb(var(--color-background));
   color: rgb(var(--color-text));
 }
+
+/*
+ * Boot splash — shown only when launched as an installed PWA (standalone).
+ * Renders on first paint (no JS needed), then fades itself out so it never
+ * blocks interaction. On the plain website it stays hidden.
+ */
+.boot-splash {
+  display: none;
+}
+
+@media all and (display-mode: standalone) {
+  .boot-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    background-color: rgb(var(--color-background));
+    animation: boot-splash-out 0.4s ease 0.6s forwards;
+  }
+}
+
+.boot-splash__mark {
+  width: 30vw;
+  max-width: 132px;
+  animation: boot-splash-pulse 1.2s ease-in-out infinite;
+}
+
+.boot-splash__word {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: rgb(var(--color-primary));
+}
+
+@keyframes boot-splash-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.94);
+    opacity: 0.75;
+  }
+}
+
+@keyframes boot-splash-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

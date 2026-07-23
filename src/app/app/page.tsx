@@ -7,6 +7,7 @@ import { useContactsWithBalances } from "@/hooks/use-ledger";
 import { formatTaka } from "@/lib/money";
 import { BalanceAmount, ScreenLoading } from "@/components/ledger/shared";
 import { SyncIndicator } from "@/components/ledger/sync-indicator";
+import { Logo } from "@/components/brand/logo";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -21,9 +22,7 @@ export default function Home() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-24">
       <header className="flex items-center gap-3 py-5">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white">
-          খ
-        </div>
+        <Logo className="h-11 w-11 shrink-0" />
         <div className="flex-1">
           <h1 className="text-lg font-bold leading-tight">ওপেনখাতা</h1>
           <p className="text-sm text-text-muted">ডিজিটাল বাকির খাতা</p>

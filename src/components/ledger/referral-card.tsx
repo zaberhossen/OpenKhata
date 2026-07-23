@@ -1,22 +1,31 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-import { Gift, Copy, Share2, Award, Check } from "lucide-react";
+import { Gift, Copy, Share2, Award, Check, LogIn } from "lucide-react";
 import { useProfile } from "@/hooks/use-profile";
 import { isSupporter, referralLink, SUPPORTER_THRESHOLD } from "@/lib/referral";
+import { isSyncConfigured } from "@/lib/supabase";
 import { nativeShare } from "@/lib/share";
 
-/** "রেফার করুন" section: share code/link + invite count + supporter badge. */
+/** Base app link used when there's no personal referral code yet. */
+function appLink(): string {
+  return typeof window !== "undefined"
+    ? window.location.origin
+    : "https://openkhata";
+}
+
+/**
+ * "রেফার করুন" section. Always visible so it's easy to find. With a signed-in
+ * profile it shows the personal code, invite count and supporter badge; signed
+ * out (or without cloud sync) it still lets you share the app and points to
+ * login for the personalised link.
+ */
 export function ReferralCard() {
   const { profile } = useProfile();
   const [copied, setCopied] = useState(false);
 
-  // Render nothing until we have a profile (signed out / loading / no sync).
-  if (!profile) return null;
-
-  const link = referralLink(profile.referral_code);
-  const count = profile.referral_count;
-  const supporter = isSupporter(count);
+  const link = profile ? referralLink(profile.referral_code) : appLink();
   const shareText =
     "আমি ওপেনখাতা দিয়ে আমার দোকানের বাকির হিসাব রাখি — ফ্রি, অফলাইন ও " +
     `ওপেন-সোর্স। তুমিও ব্যবহার করে দেখো:\n${link}`;
@@ -41,22 +50,42 @@ export function ReferralCard() {
         অন্য দোকানদারকে ওপেনখাতা চেনান। আপনার লিংকে কেউ যোগ দিলে এখানে গোনা হবে।
       </p>
 
-      <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-background p-3">
-        <span className="text-sm">
-          মোট রেফার:{" "}
-          <span className="text-lg font-bold text-primary">{count}</span>
-        </span>
-        {supporter ? (
-          <span className="flex items-center gap-1 rounded-full bg-primary-light px-3 py-1 text-sm font-bold text-primary-dark">
-            <Award size={15} aria-hidden />
-            সমর্থক
+      {profile ? (
+        <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-background p-3">
+          <span className="text-sm">
+            মোট রেফার:{" "}
+            <span className="text-lg font-bold text-primary">
+              {profile.referral_count}
+            </span>
           </span>
-        ) : (
-          <span className="text-xs text-text-muted">
-            সমর্থক ব্যাজের জন্য আর {SUPPORTER_THRESHOLD - count}টি
-          </span>
-        )}
-      </div>
+          {isSupporter(profile.referral_count) ? (
+            <span className="flex items-center gap-1 rounded-full bg-primary-light px-3 py-1 text-sm font-bold text-primary-dark">
+              <Award size={15} aria-hidden />
+              সমর্থক
+            </span>
+          ) : (
+            <span className="text-xs text-text-muted">
+              সমর্থক ব্যাজের জন্য আর{" "}
+              {SUPPORTER_THRESHOLD - profile.referral_count}
+              টি
+            </span>
+          )}
+        </div>
+      ) : isSyncConfigured() ? (
+        <Link
+          href="/app/login"
+          className="mt-3 flex items-center gap-2 rounded-2xl bg-background p-3 text-sm text-text-muted hover:text-text"
+        >
+          <LogIn size={16} aria-hidden />
+          নিজের রেফার লিংক ও গণনা পেতে{" "}
+          <span className="font-semibold text-primary">লগইন করুন</span>
+        </Link>
+      ) : (
+        <p className="mt-3 rounded-2xl bg-background p-3 text-sm text-text-muted">
+          এখনই অ্যাপের লিংক শেয়ার করে বন্ধুকে চেনাতে পারেন। লগইন চালু হলে আপনার
+          নিজের রেফার লিংক ও গণনাও এখানে দেখাবে।
+        </p>
+      )}
 
       <div className="mt-3 flex items-center gap-2">
         <input
