@@ -12,9 +12,11 @@ import {
   Bell,
   ArrowRight,
   Smartphone,
+  Heart,
 } from "lucide-react";
 
 const REPO_URL = "https://github.com/zaberhossen/OpenKhata";
+const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL;
 
 export const metadata: Metadata = {
   title: "ওপেনখাতা — ফ্রি ডিজিটাল বাকির খাতা",
@@ -56,7 +58,7 @@ const FEATURES = [
 ];
 
 const BADGES = [
-  { icon: BadgeDollarSign, label: "সম্পূর্ণ ফ্রি" },
+  { icon: BadgeDollarSign, label: "লোকাল ফ্রি" },
   { icon: Github, label: "ওপেন-সোর্স" },
   { icon: ShieldCheck, label: "ডেটা আপনার" },
 ];
@@ -150,9 +152,46 @@ export default function LandingPage() {
             <ArrowRight size={18} aria-hidden />
           </Link>
         </section>
+
+        {/* Backup positioning */}
+        <section className="my-6 rounded-2xl border border-border bg-surface p-6">
+          <h2 className="text-center text-xl font-bold">
+            ব্যাকআপ — আপনার পছন্দ
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-center text-text-muted">
+            অ্যাপ চালাতে লগইন লাগে না — সব ডেটা আপনার ফোনেই। ফোন হারালেও যেন
+            ডেটা না হারায়, তাই চাইলে ব্যাকআপ চালু করুন:
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border p-4">
+              <p className="font-bold">নিজের Google Drive</p>
+              <p className="mt-1 text-sm text-text-muted">
+                আপনার নিজের ড্রাইভে ব্যাকআপ — সম্পূর্ণ ফ্রি, ডেটা আপনারই থাকে।
+              </p>
+            </div>
+            <div className="rounded-2xl border border-border p-4">
+              <p className="font-bold">ওপেনখাতা ক্লাউড</p>
+              <p className="mt-1 text-sm text-text-muted">
+                আমাদের সার্ভারে নিরাপদ ব্যাকআপ ও একাধিক ফোনে সিংক — ফ্রি
+                ট্রায়াল, পরে অল্প সার্ভিস চার্জ।
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="flex flex-col items-center gap-2 py-8 text-center text-sm text-text-muted">
+        {DONATE_URL && (
+          <a
+            href={DONATE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-2 flex min-h-tap items-center justify-center gap-2 rounded-2xl border border-primary px-6 font-bold text-primary hover:bg-primary-light"
+          >
+            <Heart size={18} aria-hidden />
+            ওপেনখাতাকে সহায়তা করুন
+          </a>
+        )}
         <a
           href={REPO_URL}
           target="_blank"
@@ -162,7 +201,7 @@ export default function LandingPage() {
           <Github size={16} aria-hidden />
           GitHub-এ কোড দেখুন
         </a>
-        <p>MIT লাইসেন্স · সবার জন্য ফ্রি</p>
+        <p>MIT লাইসেন্স · অ্যাপ চিরকাল ফ্রি</p>
       </footer>
     </div>
   );

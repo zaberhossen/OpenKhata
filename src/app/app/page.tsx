@@ -20,8 +20,8 @@ export default function Home() {
   );
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-24">
-      <header className="flex items-center gap-3 py-5">
+    <div className="mx-auto flex h-dvh max-w-md flex-col overflow-hidden px-4">
+      <header className="flex shrink-0 items-center gap-3 py-5">
         <Logo className="h-11 w-11 shrink-0" />
         <div className="flex-1">
           <h1 className="text-lg font-bold leading-tight">ওপেনখাতা</h1>
@@ -48,7 +48,7 @@ export default function Home() {
 
       <section
         aria-label="মোট হিসাব"
-        className="grid grid-cols-2 divide-x divide-border rounded-2xl border border-border bg-surface"
+        className="grid shrink-0 grid-cols-2 divide-x divide-border rounded-2xl border border-border bg-surface"
       >
         <div className="p-4 text-center">
           <p className="text-sm text-text-muted">মোট পাবো</p>
@@ -69,10 +69,10 @@ export default function Home() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="নাম বা ফোন নম্বর খুঁজুন…"
-        className="mt-4 min-h-tap rounded-2xl border border-border bg-surface px-4 outline-none focus:border-primary"
+        className="mt-4 min-h-tap shrink-0 rounded-2xl border border-border bg-surface px-4 outline-none focus:border-primary"
       />
 
-      <main className="mt-4 flex flex-1 flex-col">
+      <main className="mt-4 flex min-h-0 flex-1 flex-col">
         {!data ? (
           <ScreenLoading />
         ) : filtered!.length === 0 ? (
@@ -88,7 +88,7 @@ export default function Home() {
             )}
           </div>
         ) : (
-          <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
+          <ul className="min-h-0 flex-1 divide-y divide-border overflow-y-auto rounded-2xl border border-border bg-surface">
             {filtered!.map((contact) => (
               <li key={contact.id}>
                 <Link
@@ -117,7 +117,7 @@ export default function Home() {
 
       <Link
         href="/app/contact-form"
-        className="fixed bottom-5 left-1/2 flex min-h-tap w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center rounded-2xl bg-primary text-lg font-bold text-white shadow-lg hover:bg-primary-dark"
+        className="mb-5 mt-4 flex min-h-tap shrink-0 items-center justify-center rounded-2xl bg-primary text-lg font-bold text-white shadow-lg hover:bg-primary-dark"
       >
         + নতুন কাস্টমার/সাপ্লায়ার
       </Link>

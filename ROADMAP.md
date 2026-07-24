@@ -122,6 +122,45 @@ Core ledger stable — এখন adoption ও পরিচিতির কাজ
 
 ---
 
+## SaaS / Monetization (চলমান)
+
+OpenKhata এখন একটি **hosted SaaS** — যে কেউ `open-khata.vercel.app`-এ গিয়ে PWA
+ইনস্টল করে সাথে সাথে ব্যবহার শুরু করতে পারে, **লগইন ছাড়াই** (সব ডেটা লোকাল)।
+লগইন শুধু **ব্যাকআপের জন্য**। লগইনের পর user একটি ব্যাকআপ গন্তব্য বেছে নেয়।
+
+**Guiding invariant:** যে user কখনো লগইন করে না, তার আচরণে কোনো পরিবর্তন হয় না —
+প্রতিটি নতুন gate additive ও `isSyncConfigured()`-এর মতো short-circuit করে।
+
+- [x] **A — Donate + positioning:** external donate লিংক (`NEXT_PUBLIC_DONATE_URL`,
+      landing + সেটিংস), landing-এ "লোকাল ফ্রি · ক্লাউড ঐচ্ছিক" framing।
+- [x] **B — Entitlement backend:** `0005_entitlements.sql` — per-user row, read-own
+      RLS, সব write `SECURITY DEFINER` RPC দিয়ে (`ensure_entitlement`,
+      `start_cloud_trial` = ১৪ দিন trial, server-computed `is_cloud_active`,
+      operator-only `grant_cloud`)। Client: `src/lib/entitlement.ts`,
+      `src/hooks/use-entitlement.ts`।
+- [x] **C — Sync gate + mutual exclusion:** `syncNow()` শুধু চলে যখন
+      destination = cloud **এবং** entitlement active (server RPC, cached ~60s)।
+      Trial শেষ হলে নিজে থেকেই থেমে যায়, লোকাল ডেটা অটুট। Drive vs Cloud একটি
+      `backup_destination` meta key দিয়ে mutually exclusive
+      (`src/lib/backup-choice.ts`)।
+- [x] **D — Backup-choice UX:** `src/components/ledger/backup-choice.tsx` —
+      লগইনের পর "নিজের Google Drive (ফ্রি)" বনাম "ওপেনখাতা ক্লাউড (পেইড, ট্রায়াল)"
+      chooser; trial countdown / expired state।
+- [ ] **E — Payment provider (DEFERRED):** billing webhook
+      `src/app/api/billing/webhook/route.ts` + server-only
+      `src/lib/supabase-admin.ts` (`SUPABASE_SERVICE_ROLE_KEY`) →
+      একই `grant_cloud` RPC কল করবে। এখন provider বেছে নেওয়া হয়নি
+      (SSLCommerz / bKash / Stripe); ততক্ষণ operator manually `grant_cloud` দিয়ে
+      access দেয়।
+
+**Trust boundary (v1 → v2):** v1-এ entitlement **app-level** enforced — data-table
+RLS (`0001_init.sql`) permissive থাকে, তাই sync gate একটি
+UX/monetization gate, hard security boundary নয়। এই audience-এ গ্রহণযোগ্য।
+**v2 (deferred):** `is_cloud_active(auth.uid())` কে data-table RLS-এর
+`using`/`with check`-এ ঢুকিয়ে server-enforced করা।
+
+---
+
 ## Open-Source Health (চলমান, সব phase জুড়ে)
 
 একটা repo শুধু কোড না — community ধরে রাখতে হয়।
