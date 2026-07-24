@@ -7,6 +7,7 @@ import { useSyncStatus, type SyncState } from "@/hooks/use-sync";
 const DOT_CLASSES: Record<SyncState, string> = {
   disabled: "bg-border",
   signedOut: "bg-border",
+  needsCloudPlan: "bg-amber-500",
   offline: "bg-text-muted",
   syncing: "animate-pulse bg-amber-500",
   pending: "bg-amber-500",
@@ -17,6 +18,7 @@ const DOT_CLASSES: Record<SyncState, string> = {
 const TITLES: Record<SyncState, string> = {
   disabled: "সেটিংস",
   signedOut: "ব্যাকআপ চালু করুন",
+  needsCloudPlan: "ক্লাউড ব্যাকআপ চালু রাখতে সাবস্ক্রাইব করুন",
   offline: "অফলাইন",
   syncing: "সিংক হচ্ছে…",
   pending: "ব্যাকআপ অপেক্ষমাণ",

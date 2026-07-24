@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { getBackupChoice, setBackupChoice } from "./backup-choice";
 import { exportBackup, importBackup, type RestoreResult } from "./backup";
 import {
   clearDriveToken,
@@ -71,6 +72,7 @@ export async function connectDrive(
   await setMeta(KEY_AUTO, frequency);
   if (email) await setMeta(KEY_EMAIL, email);
   await delMeta(KEY_NEEDS_RECONNECT);
+  await setBackupChoice("drive");
 }
 
 export async function setDriveFrequency(freq: DriveFrequency): Promise<void> {
@@ -85,6 +87,7 @@ export async function disconnectDrive(): Promise<void> {
     delMeta(KEY_LAST_MAXTS),
     delMeta(KEY_NEEDS_RECONNECT),
   ]);
+  await setBackupChoice("none"); // back to the chooser
 }
 
 /** Latest updated_at across all data tables (empty string if no data). */
@@ -128,6 +131,9 @@ export async function backupNow(interactive: boolean): Promise<void> {
  */
 export async function runAutoBackup(): Promise<void> {
   if (!isDriveConfigured()) return;
+  // Mutual exclusion: only run when Drive is the chosen destination, so a
+  // logged-in Cloud user doesn't silently back up in two places at once.
+  if ((await getBackupChoice()) !== "drive") return;
   if (typeof navigator !== "undefined" && !navigator.onLine) return;
 
   const { frequency, lastBackupAt } = await getDriveSettings();

@@ -1,6 +1,7 @@
 import { liveQuery } from "dexie";
 import { db, type SyncedTable } from "./db";
 import { getSupabase, isSyncConfigured } from "./supabase";
+import { getBackupChoice } from "./backup-choice";
 
 /**
  * Sync engine (Phase 2).
@@ -55,6 +56,33 @@ async function hasSession(): Promise<boolean> {
   if (!isSyncConfigured()) return false;
   const { data } = await getSupabase().auth.getSession();
   return Boolean(data.session);
+}
+
+// Cache the server-computed entitlement check so we don't fire an RPC on every
+// debounce tick. TTL matches the auto-sync interval; cleared on auth change.
+let cloudActiveCache: { value: boolean; at: number } | null = null;
+const CLOUD_CACHE_TTL_MS = AUTO_SYNC_INTERVAL_MS;
+
+/** Invalidate the cached entitlement check (e.g. right after starting a trial
+ *  or a manual grant) so the next syncNow() re-checks the server immediately. */
+export function clearCloudCache(): void {
+  cloudActiveCache = null;
+}
+
+/**
+ * Whether the user currently has cloud access. Uses the server RPC (server
+ * now()) so a wrong device clock can't extend a trial — never trusts a locally
+ * computed expiry. Returns false (fail-closed) on any error.
+ */
+async function hasCloudEntitlement(): Promise<boolean> {
+  const now = Date.now();
+  if (cloudActiveCache && now - cloudActiveCache.at < CLOUD_CACHE_TTL_MS) {
+    return cloudActiveCache.value;
+  }
+  const { data, error } = await getSupabase().rpc("is_cloud_active");
+  const value = !error && data === true;
+  cloudActiveCache = { value, at: now };
+  return value;
 }
 
 async function pushTable(table: SyncedTable): Promise<void> {
@@ -129,6 +157,12 @@ export function syncNow(): Promise<void> {
     try {
       if (typeof navigator !== "undefined" && !navigator.onLine) return;
       if (!(await hasSession())) return;
+      // Cloud sync only runs when the user picked the Cloud destination AND has
+      // an active paid/trial entitlement. Otherwise it's a no-op — Drive backup
+      // and the fully-local experience are untouched. Local writes keep queuing
+      // in the outbox; nothing is lost when access lapses.
+      if ((await getBackupChoice()) !== "cloud") return;
+      if (!(await hasCloudEntitlement())) return;
       setActivity("syncing");
       for (const table of TABLES) await pushTable(table);
       for (const table of TABLES) await pullTable(table);
@@ -151,6 +185,7 @@ export function syncNow(): Promise<void> {
 /** Sign out, keeping local data on the device. Sync cursors reset so a
  *  different account's pull starts from scratch. */
 export async function signOutKeepingData(): Promise<void> {
+  clearCloudCache();
   await getSupabase().auth.signOut();
   await db.meta.bulkDelete([
     "last_sync_at",
@@ -166,6 +201,7 @@ export function initSync(): void {
   started = true;
 
   getSupabase().auth.onAuthStateChange((event) => {
+    clearCloudCache(); // re-check entitlement for the new session
     if (event === "SIGNED_IN" || event === "INITIAL_SESSION") void syncNow();
   });
 

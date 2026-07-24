@@ -1,8 +1,22 @@
-# Supabase setup (Phase 2 — cloud sync & backup)
+# Supabase setup (cloud sync, auth & billing)
 
-Cloud sync is **optional**. Without it, OpenKhata works fully offline with all
-data on the device. With it, data is backed up to your own Supabase project
-and syncs across devices.
+This guide is for the **operator** running OpenKhata as a hosted SaaS. Supabase
+here is _your_ (the operator's) cloud — it provides three things: Google/email
+login, the paid **OpenKhata Cloud** backup tier, and the entitlement layer that
+gates it.
+
+For end users the model is:
+
+- **No login** → the app is 100% local (Dexie/IndexedDB), fully offline. Nothing
+  touches Supabase.
+- **Login (Google)** → the user picks a backup destination:
+  - **their own Google Drive** — free forever, user-owned (see below); or
+  - **OpenKhata Cloud** — this Supabase project, a **paid tier** with a 14-day
+    free trial. Cloud sync only runs while the user has an active entitlement
+    (`start_cloud_trial` / `grant_cloud`, migration `0005_entitlements.sql`).
+
+Cloud sync stays **optional**: without Supabase env config the app is offline-only
+and the login/cloud UI is hidden. See `../ROADMAP.md` → "SaaS / Monetization".
 
 ## 1. Create a project
 
@@ -92,6 +106,22 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 Restart the dev server (`NEXT_PUBLIC_*` is inlined at build time). A sync
 indicator appears in the app header and login/backup become available under
 সেটিংস (settings).
+
+## Granting cloud access (manual — until a payment provider is wired)
+
+A payment provider is **deferred**. Until it's added, you (the operator) grant
+paid access manually. Two ways, both service-role only (never exposed to the
+browser):
+
+1. **Dashboard row edit:** Table editor → `entitlements` → set the user's
+   `status = 'active'` and `current_period_end` to a future date.
+2. **RPC (auditable):** in the SQL editor run
+   `select grant_cloud('<user-uuid>', now() + interval '1 month');`
+
+Users self-serve a 14-day trial the moment they choose "OpenKhata Cloud"
+(`start_cloud_trial`, allowed once). When a provider is added later, its webhook
+(`src/app/api/billing/webhook/route.ts`, using `SUPABASE_SERVICE_ROLE_KEY`) just
+calls the same `grant_cloud` — nothing else changes.
 
 ## How sync works
 
