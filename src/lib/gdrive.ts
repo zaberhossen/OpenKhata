@@ -46,6 +46,9 @@ interface GoogleGis {
         client_id: string;
         scope: string;
         prompt?: string;
+        // Pre-selects this Google account in the consent/chooser UI so the
+        // backup lands in the same account the user logged in with.
+        hint?: string;
         callback: (resp: TokenResponse) => void;
         error_callback?: (err: { type?: string }) => void;
       }) => TokenClient;
@@ -91,10 +94,14 @@ export function clearDriveToken(): void {
 /**
  * Get a Drive access token. `interactive: true` may show a Google consent
  * popup (call only from a user gesture). `interactive: false` refreshes
- * silently and throws `NeedsReconnectError` if consent is required.
+ * silently and throws `NeedsReconnectError` if consent is required. `hint` is
+ * the user's login email — passed so Google pre-selects that account, keeping
+ * the backup in the same account the user signed in with.
  */
 export async function getAccessToken(
-  { interactive }: { interactive: boolean } = { interactive: true },
+  { interactive, hint }: { interactive: boolean; hint?: string } = {
+    interactive: true,
+  },
 ): Promise<string> {
   if (!CLIENT_ID) throw new Error("Google Drive কনফিগার করা নেই।");
   if (cachedToken && cachedToken.expiresAt - TOKEN_SKEW_MS > Date.now()) {
@@ -105,6 +112,7 @@ export async function getAccessToken(
     const client = window.google!.accounts.oauth2.initTokenClient({
       client_id: CLIENT_ID,
       scope: SCOPE,
+      ...(hint ? { hint } : {}),
       callback: (resp) => {
         if (resp.error || !resp.access_token) {
           const err = resp.error || "টোকেন পাওয়া যায়নি।";

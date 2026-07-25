@@ -1,21 +1,21 @@
 "use client";
 
-import Link from "next/link";
-import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { Bell, Share2, ScrollText, X, ArrowUp, ArrowDown } from "lucide-react";
-import { useContactLedger } from "@/hooks/use-ledger";
-import { deleteEntry } from "@/lib/repo";
-import { formatTaka } from "@/lib/money";
-import { formatDate } from "@/lib/dates";
-import { paymentMethodInfo } from "@/lib/payments";
-import { reminderMessage, statementMessage } from "@/lib/share";
+import { ShareSheet } from "@/components/ledger/share-sheet";
 import {
   BackLink,
   BalanceAmount,
   ScreenLoading,
 } from "@/components/ledger/shared";
-import { ShareSheet } from "@/components/ledger/share-sheet";
+import { useContactLedger } from "@/hooks/use-ledger";
+import { formatDate } from "@/lib/dates";
+import { formatTaka } from "@/lib/money";
+import { paymentMethodInfo } from "@/lib/payments";
+import { deleteEntry } from "@/lib/repo";
+import { reminderMessage, statementMessage } from "@/lib/share";
+import { ArrowDown, ArrowUp, Bell, ScrollText, Share2, X } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 function ContactScreen() {
   const contactId = useSearchParams().get("id");
@@ -39,7 +39,7 @@ function ContactScreen() {
 
   return (
     <>
-      <header className="flex items-center gap-2 py-3">
+      <header className="sticky top-0 z-20 -mx-4 flex shrink-0 items-center gap-2 border-b border-border bg-background px-4 py-3">
         <BackLink href="/app" />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-bold leading-tight">
@@ -58,7 +58,7 @@ function ContactScreen() {
         </Link>
       </header>
 
-      <section className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4">
+      <section className="mt-4 flex shrink-0 items-center justify-between rounded-2xl border border-border bg-surface p-4">
         <span className="text-text-muted">
           {balance > 0
             ? "পাবো (উনি দেবেন)"
@@ -72,7 +72,7 @@ function ContactScreen() {
       </section>
 
       {entries.length > 0 && (
-        <section className="mt-3 grid grid-cols-2 gap-3">
+        <section className="mt-3 grid shrink-0 grid-cols-2 gap-3">
           {balance > 0 && (
             <ShareSheet
               title={`${contact.name}-কে রিমাইন্ডার`}
@@ -104,7 +104,7 @@ function ContactScreen() {
         </section>
       )}
 
-      <main className="mt-4 flex flex-1 flex-col pb-28">
+      <main className="mb-4 mt-4 flex min-h-0 flex-1 flex-col">
         {entries.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 text-center">
             <ScrollText size={40} className="text-text-muted" aria-hidden />
@@ -114,7 +114,7 @@ function ContactScreen() {
             </p>
           </div>
         ) : (
-          <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface">
+          <ul className="min-h-0 flex-1 divide-y divide-border overflow-y-auto rounded-2xl border border-border bg-surface">
             {entries.map((entry) => (
               <li key={entry.id} className="flex items-center gap-3 px-4 py-3">
                 <div className="min-w-0 flex-1">
@@ -162,7 +162,7 @@ function ContactScreen() {
         )}
       </main>
 
-      <div className="fixed bottom-0 left-1/2 grid w-full max-w-md -translate-x-1/2 grid-cols-2 gap-3 bg-background/95 p-4">
+      <div className="-mx-4 grid shrink-0 grid-cols-2 gap-3 border-t border-border bg-background px-4 py-3">
         <Link
           href={`/app/entry?contact=${contact.id}&type=gave`}
           className="flex min-h-tap items-center justify-center gap-1 rounded-2xl bg-gave py-3 text-lg font-bold text-white shadow-lg hover:opacity-90"
@@ -182,7 +182,7 @@ function ContactScreen() {
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4">
+    <div className="mx-auto flex h-dvh max-w-md flex-col overflow-hidden px-4">
       <Suspense fallback={<ScreenLoading />}>
         <ContactScreen />
       </Suspense>

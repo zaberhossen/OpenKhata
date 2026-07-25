@@ -113,9 +113,13 @@ function isDue(freq: DriveFrequency, lastAt: string | null): boolean {
   return elapsed >= INTERVAL_MS[freq];
 }
 
-/** Perform a backup now (interactive picks up a fresh token via popup). */
-export async function backupNow(interactive: boolean): Promise<void> {
-  const token = await getAccessToken({ interactive });
+/** Perform a backup now (interactive picks up a fresh token via popup). `hint`
+ *  pre-selects the user's login account in the chooser. */
+export async function backupNow(
+  interactive: boolean,
+  hint?: string,
+): Promise<void> {
+  const token = await getAccessToken({ interactive, hint });
   await uploadBackup(token, await exportBackup());
   const now = new Date().toISOString();
   await setMeta(KEY_LAST_AT, now);
@@ -159,8 +163,9 @@ export async function runAutoBackup(): Promise<void> {
 /** Restore from the Drive backup; returns null if there is none. */
 export async function restoreFromDrive(
   interactive: boolean,
+  hint?: string,
 ): Promise<RestoreResult | null> {
-  const token = await getAccessToken({ interactive });
+  const token = await getAccessToken({ interactive, hint });
   const json = await downloadBackup(token);
   if (!json) return null;
   return importBackup(json);

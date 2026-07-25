@@ -53,7 +53,7 @@ function EntryScreen() {
 
   return (
     <>
-      <header className="flex items-center gap-2 py-3">
+      <header className="sticky top-0 z-20 -mx-4 flex shrink-0 items-center gap-2 border-b border-border bg-background px-4 py-3">
         <BackLink href={`/app/contact?id=${contact.id}`} />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-lg font-bold leading-tight">
@@ -75,7 +75,7 @@ function EntryScreen() {
         </div>
       </header>
 
-      <main className="flex flex-1 flex-col gap-4 py-2">
+      <main className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto py-4">
         <label className="flex flex-col gap-1">
           <span className="text-sm text-text-muted">টাকার পরিমাণ *</span>
           <div
@@ -151,7 +151,7 @@ function EntryScreen() {
         </label>
       </main>
 
-      <div className="sticky bottom-0 bg-background/95 py-4">
+      <div className="-mx-4 shrink-0 border-t border-border bg-background px-4 py-3">
         <button
           type="button"
           onClick={save}
@@ -169,7 +169,7 @@ function EntryScreen() {
 
 export default function EntryPage() {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4">
+    <div className="mx-auto flex h-dvh max-w-md flex-col overflow-hidden px-4">
       <Suspense fallback={<ScreenLoading />}>
         <EntryScreen />
       </Suspense>

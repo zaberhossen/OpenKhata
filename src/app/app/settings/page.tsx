@@ -56,13 +56,13 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4">
-      <header className="flex items-center gap-2 py-3">
+    <div className="mx-auto flex h-dvh max-w-md flex-col overflow-hidden px-4">
+      <header className="-mx-4 flex shrink-0 items-center gap-2 border-b border-border bg-background px-4 py-3">
         <BackLink href="/app" />
         <h1 className="text-lg font-bold">সেটিংস ও ব্যাকআপ</h1>
       </header>
 
-      <main className="flex flex-1 flex-col gap-4 py-2">
+      <main className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto py-4">
         {!isSyncConfigured() ? (
           <>
             <section className="rounded-2xl border border-dashed border-border p-4 text-sm text-text-muted">

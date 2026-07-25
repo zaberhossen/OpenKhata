@@ -44,8 +44,8 @@ export default function CollectPage() {
   const accounts = usePaymentAccounts();
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8">
-      <header className="flex items-center gap-2 py-3 print:hidden">
+    <div className="mx-auto flex h-dvh max-w-md flex-col overflow-hidden px-4">
+      <header className="-mx-4 flex shrink-0 items-center gap-2 border-b border-border bg-background px-4 py-3 print:hidden">
         <BackLink href="/app" />
         <h1 className="text-lg font-bold">টাকা নিন</h1>
       </header>
@@ -53,7 +53,7 @@ export default function CollectPage() {
       {!accounts ? (
         <ScreenLoading />
       ) : accounts.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 py-16 text-center">
+        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 overflow-y-auto py-16 text-center">
           <Wallet size={40} className="text-text-muted" aria-hidden />
           <p className="font-semibold">কোনো পেমেন্ট নম্বর যোগ করা নেই</p>
           <p className="text-sm text-text-muted">
@@ -68,7 +68,7 @@ export default function CollectPage() {
           </Link>
         </div>
       ) : (
-        <main className="flex flex-1 flex-col gap-4 py-2">
+        <main className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto py-4">
           <p className="text-center text-sm text-text-muted">
             কাস্টমারকে QR দেখান — স্ক্যান করে অথবা নিচের নম্বরে টাকা পাঠাতে
             পারবেন।
