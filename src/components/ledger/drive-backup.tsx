@@ -25,6 +25,7 @@ import {
   setDriveFrequency,
   type DriveFrequency,
 } from "@/lib/drive-auto";
+import { useAuthUser } from "@/hooks/use-sync";
 
 function formatTimestamp(iso: string): string {
   return new Intl.DateTimeFormat("bn-BD", {
@@ -46,11 +47,16 @@ const FREQ_LABEL: Record<Exclude<DriveFrequency, "off">, string> = {
  */
 export function DriveBackup() {
   const settings = useLiveQuery(() => getDriveSettings(), [], null);
+  const { user } = useAuthUser();
   const [busy, setBusy] = useState<null | string>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   if (!isDriveConfigured() || !settings) return null;
+
+  // Pre-select the logged-in account in Google's chooser so the backup lands
+  // in the same account the user signed in with (undefined when signed out).
+  const hint = user?.email ?? undefined;
 
   const connected = settings.frequency !== "off";
 
@@ -65,7 +71,7 @@ export function DriveBackup() {
     setMessage(null);
     setError(null);
     try {
-      const token = await getAccessToken({ interactive: true });
+      const token = await getAccessToken({ interactive: true, hint });
       const [email, remote] = await Promise.all([
         getConnectedEmail(token),
         hasRemoteBackup(token),
@@ -78,18 +84,18 @@ export function DriveBackup() {
             "আপনার Google Drive-এ আগের একটি ব্যাকআপ পাওয়া গেছে। এখন রিস্টোর করবেন? (বর্তমান ডেটার সাথে মিলিয়ে নেওয়া হবে — কিছু মুছবে না।)",
           )
         ) {
-          const result = await restoreFromDrive(true);
+          const result = await restoreFromDrive(true, hint);
           setMessage(
             result
               ? `রিস্টোর সম্পন্ন: ${result.applied}টি যুক্ত হয়েছে। অটো-ব্যাকআপ চালু হলো।`
               : "অটো-ব্যাকআপ চালু হলো।",
           );
-          await backupNow(true); // push the merged (superset) state
+          await backupNow(true, hint); // push the merged (superset) state
         } else {
           setMessage("অটো-ব্যাকআপ চালু হলো।");
         }
       } else {
-        await backupNow(true); // create the first backup
+        await backupNow(true, hint); // create the first backup
         setMessage("অটো-ব্যাকআপ চালু হলো — প্রথম ব্যাকআপ সম্পন্ন।");
       }
     } catch (e) {
@@ -105,7 +111,7 @@ export function DriveBackup() {
     setMessage(null);
     setError(null);
     try {
-      await backupNow(true);
+      await backupNow(true, hint);
       setMessage("Google Drive-এ ব্যাকআপ সম্পন্ন হয়েছে।");
     } catch (e) {
       fail(e, "ব্যাকআপ ব্যর্থ হয়েছে।");
@@ -127,7 +133,7 @@ export function DriveBackup() {
     setMessage(null);
     setError(null);
     try {
-      const result = await restoreFromDrive(true);
+      const result = await restoreFromDrive(true, hint);
       if (!result) {
         setError("Drive-এ কোনো ব্যাকআপ পাওয়া যায়নি।");
         return;

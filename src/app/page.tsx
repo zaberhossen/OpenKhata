@@ -66,7 +66,7 @@ const BADGES = [
 export default function LandingPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-3xl flex-col px-4">
-      <header className="flex items-center gap-3 py-5">
+      <header className="sticky top-0 z-20 -mx-4 flex shrink-0 items-center gap-3 border-b border-border bg-background px-4 py-5">
         <Logo className="h-11 w-11 shrink-0" />
         <span className="flex-1 text-lg font-bold">ওপেনখাতা</span>
         <a
@@ -201,6 +201,9 @@ export default function LandingPage() {
           <Github size={16} aria-hidden />
           GitHub-এ কোড দেখুন
         </a>
+        <Link href="/privacy" className="hover:text-text">
+          প্রাইভেসি পলিসি
+        </Link>
         <p>MIT লাইসেন্স · অ্যাপ চিরকাল ফ্রি</p>
       </footer>
     </div>

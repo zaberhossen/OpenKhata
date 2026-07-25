@@ -63,14 +63,14 @@ function ContactFormScreen() {
 
   return (
     <>
-      <header className="flex items-center gap-2 py-3">
-        <BackLink href={editing ? `/contact?id=${editing.id}` : "/"} />
+      <header className="sticky top-0 z-20 -mx-4 flex shrink-0 items-center gap-2 border-b border-border bg-background px-4 py-3">
+        <BackLink href={editing ? `/app/contact?id=${editing.id}` : "/app"} />
         <h1 className="text-lg font-bold">
           {editing ? "তথ্য সম্পাদনা" : "নতুন কাস্টমার/সাপ্লায়ার"}
         </h1>
       </header>
 
-      <main className="flex flex-1 flex-col gap-4 py-2">
+      <main className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto py-4">
         <label className="flex flex-col gap-1">
           <span className="text-sm text-text-muted">নাম *</span>
           {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
@@ -126,7 +126,7 @@ function ContactFormScreen() {
         )}
       </main>
 
-      <div className="sticky bottom-0 bg-background/95 py-4">
+      <div className="-mx-4 shrink-0 border-t border-border bg-background px-4 py-3">
         <button
           type="button"
           onClick={save}
@@ -142,7 +142,7 @@ function ContactFormScreen() {
 
 export default function ContactFormPage() {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4">
+    <div className="mx-auto flex h-dvh max-w-md flex-col overflow-hidden px-4">
       <Suspense fallback={<ScreenLoading />}>
         <ContactFormScreen />
       </Suspense>

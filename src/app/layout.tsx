@@ -6,6 +6,7 @@ import { ReferralWatcher } from "@/components/pwa/referral-watcher";
 import { DriveAutoBackup } from "@/components/pwa/drive-auto-backup";
 import { PwaHead } from "@/components/pwa/pwa-head";
 import { BootSplash } from "@/components/pwa/boot-splash";
+import { InstallBanner } from "@/components/pwa/install-banner";
 
 export const metadata: Metadata = {
   title: "ওপেনখাতা",
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <BootSplash />
         {children}
+        <InstallBanner />
         <ServiceWorkerRegistration />
         <SyncProvider />
         <ReferralWatcher />
