@@ -22,7 +22,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 // --- Brand tokens (keep in sync with globals.css / manifest) ------------
 const BG = "#f8fafc"; // slate-50 — matches manifest background_color
 const WHITE = "#ffffff";
-const BRAND = "#15A363";
+const BRAND = "#0D9488"; // teal-600 — matches the brand mark & --color-primary
 
 // --- Logo source: prefer the exact PNG, fall back to the vector ----------
 const pngSource = join(root, "public/brand/logo.png");

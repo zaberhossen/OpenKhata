@@ -17,6 +17,42 @@ verification + একটা demo video লাগে।
 
 ---
 
+## প্রশ্ন: Privacy Policy বাংলায় হলে Google কি accept করবে?
+
+**ঝুঁকিপূর্ণ — বাংলা-only না রাখাই ভালো।** Google-এর OAuth রিভিউয়াররা ইংরেজিতে
+কাজ করে; পলিসি তারা পড়ে বুঝতে না পারলে verification **আটকে বা reject** হতে পারে।
+Google আনুষ্ঠানিকভাবে "ইংরেজি বাধ্যতামূলক" বলে না, কিন্তু বাস্তবে ইংরেজি
+(বা bilingual) পলিসিই নিরাপদ।
+
+✅ **এই রিপোতে ঠিক করা আছে:** `/privacy` এখন **bilingual** — উপরে ভাষা টগল আছে
+এবং **ডিফল্ট English** (রিভিউয়ার প্রথমেই ইংরেজি দেখবে), বাংলা এক ট্যাপ দূরে।
+একটি **English + বাংলা** Terms পেজও যোগ করা হয়েছে (`/terms`)।
+
+## Public release — চূড়ান্ত রেডিনেস চেকলিস্ট
+
+কোড/অ্যাপের দিক থেকে যা তৈরি (✅) আর আপনাকে Google Cloud Console-এ যা করতে হবে (☐):
+
+- [x] Privacy Policy — bilingual, English-default (`/privacy`)
+- [x] Terms of Service — bilingual (`/terms`)
+- [x] Homepage — `/` (verified domain-এ)
+- [x] Limited Use disclosure পলিসিতে আছে
+- [x] `drive.appdata` ছাড়া অন্য কোনো sensitive scope অ্যাপ চায় না
+- [ ] Google Search Console-এ ডোমেইন (`open-khata.vercel.app` বা custom) verify
+- [ ] Consent screen → **Branding**: App name, logo (120×120), support email,
+      developer contact email
+- [ ] Consent screen → **Data access**: `.../auth/drive.appdata` + justification
+      (নমুনা নিচে)
+- [ ] **Demo video** (YouTube unlisted): OAuth grant flow + Drive ব্যাকআপ/রিস্টোর,
+      URL bar-এ verified domain দেখা যায়
+- [ ] Consent screen → **Publish app** → verification submit
+
+> App URLs to submit:
+> Home = `https://open-khata.vercel.app/` ·
+> Privacy = `https://open-khata.vercel.app/privacy` ·
+> Terms = `https://open-khata.vercel.app/terms`
+
+---
+
 ## Testing মোডে দ্রুত শুরু (verification ছাড়াই)
 
 নিজে + কয়েকজন পরিচিত দিয়ে টেস্ট করতে verification লাগে না:
