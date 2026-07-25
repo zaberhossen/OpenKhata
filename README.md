@@ -20,28 +20,44 @@ OpenKhata-র লক্ষ্য: **২-৩ ট্যাপে লেনদে�
 
 ## Status
 
-✅ Through **Phase 4 (Steps 1–2)** plus a **growth & polish** pass. On top of the
-offline Phase 1 ledger, Phase 2 cloud sync, and Phase 3 reminders/reports/
-sharing, the app now has: manual payment-method tagging + static merchant QR
-("টাকা নিন"); a promotional landing page at `/` with the app under `/app`; a
-lucide-react icon set; Google sign-in + email magic-link auth; user-owned
-Google Drive backup; and a referral system with a cosmetic "সমর্থক" badge.
+✅ A working, installable PWA now running as a **hosted SaaS** at
+[open-khata.vercel.app](https://open-khata.vercel.app). Anyone can install it and
+start using it immediately — **no login required, all data local**.
+
+On top of the offline Phase 1 ledger, Phase 2 cloud sync, and Phase 3
+reminders/reports/sharing, the app has: manual payment-method tagging + static
+merchant QR ("টাকা নিন"); a landing page at `/` with the app under `/app`;
+Google sign-in + email magic-link auth; a referral "সমর্থক" badge; a Donate
+link; and a PWA install banner.
+
+### Backup — the user's choice
+
+Login is needed **only for backup**. After signing in, the user picks one
+destination (see [`backup-choice.ts`](./src/lib/backup-choice.ts)):
+
+- **Own Google Drive** — free forever, user-owned (hidden `appDataFolder`).
+- **OpenKhata Cloud** — Supabase sync across devices, gated behind an
+  **entitlement** (14-day free trial, then a paid plan). A payment provider is
+  not wired yet; access is granted manually via `grant_cloud` until then. See
+  [`0005_entitlements.sql`](./supabase/migrations/0005_entitlements.sql).
 
 Cloud sync, Google login, and Drive backup are all **optional** — without
 configuration the app is 100% local and fully offline. Setup:
 [supabase/README.md](./supabase/README.md) · Design:
 [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) · Plan:
-[ROADMAP.md](./ROADMAP.md).
+[ROADMAP.md](./ROADMAP.md) · Google verification:
+[docs/GOOGLE_VERIFICATION.md](./docs/GOOGLE_VERIFICATION.md).
 
 ## Stack
 
-| Layer     | Choice                                        |
-| --------- | --------------------------------------------- |
-| Framework | Next.js 14 (App Router) + TypeScript          |
-| Styling   | Tailwind CSS (design tokens in `globals.css`) |
-| Local DB  | Dexie.js / IndexedDB _(Phase 1)_              |
-| Backend   | Supabase (Postgres + Auth) _(Phase 2)_        |
-| PWA       | Web App Manifest + Service Worker             |
+| Layer     | Choice                                              |
+| --------- | --------------------------------------------------- |
+| Framework | Next.js 14 (App Router) + TypeScript                |
+| Styling   | Tailwind CSS (design tokens in `globals.css`)       |
+| Local DB  | Dexie.js / IndexedDB _(source of truth, on-device)_ |
+| Backend   | Supabase (Postgres + Auth + RLS) _(optional cloud)_ |
+| Icons     | lucide-react + react-icons (brand marks)            |
+| PWA       | Web App Manifest + hand-rolled Service Worker       |
 
 ## Getting started
 
@@ -58,6 +74,19 @@ registers in production builds — to test offline/install behaviour:
 ```bash
 npm run build && npm run start
 ```
+
+### Configuration (optional)
+
+The app runs fully offline with **no configuration**. To enable login + cloud
+features, copy `.env.example` to `.env.local` and fill in the values:
+
+- `NEXT_PUBLIC_SUPABASE_URL` + a Supabase key — login & OpenKhata Cloud backup.
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — Google Drive backup (see
+  [supabase/README.md](./supabase/README.md)).
+- `NEXT_PUBLIC_DONATE_URL` — the Donate button (Ko-fi / bKash link).
+- `SUPABASE_SERVICE_ROLE_KEY` — **server-only**, for the future billing webhook.
+
+`.env.local` is git-ignored — never commit real keys.
 
 ### Useful scripts
 

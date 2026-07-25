@@ -201,9 +201,15 @@ export default function LandingPage() {
           <Github size={16} aria-hidden />
           GitHub-এ কোড দেখুন
         </a>
-        <Link href="/privacy" className="hover:text-text">
-          প্রাইভেসি পলিসি
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/privacy" className="hover:text-text">
+            প্রাইভেসি পলিসি
+          </Link>
+          <span aria-hidden>·</span>
+          <Link href="/terms" className="hover:text-text">
+            সেবার শর্তাবলি
+          </Link>
+        </div>
         <p>MIT লাইসেন্স · অ্যাপ চিরকাল ফ্রি</p>
       </footer>
     </div>
