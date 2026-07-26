@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
-const CONTACT_EMAIL = "zaber@10minuteschool.com";
+const CONTACT_EMAIL = "openkhata.bd@gmail.com";
 const LAST_UPDATED = { en: "July 25, 2026", bn: "২৫ জুলাই, ২০২৬" };
 
 type Lang = "en" | "bn";

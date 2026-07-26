@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 If you find a security issue in OpenKhata, please **do not open a public
-issue**. Instead, email **zaber@10minuteschool.com** with:
+issue**. Instead, email **openkhata.bd@gmail.com** with:
 
 - a description of the issue and its impact,
 - steps to reproduce (a proof-of-concept if possible),
