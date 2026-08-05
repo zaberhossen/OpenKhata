@@ -64,6 +64,19 @@ export const ACCOUNT_METHODS = PAYMENT_METHODS.filter(
   (m) => m.value !== "cash" && m.value !== "other",
 );
 
+/**
+ * Trim numbers and drop blank rows — the exact shape that gets persisted.
+ * Shared with the editor so it can tell "unsaved edits" from "half-typed row
+ * that would be discarded anyway".
+ */
+export function normalizeAccounts(
+  accounts: PaymentAccount[],
+): PaymentAccount[] {
+  return accounts
+    .map((a) => ({ method: a.method, number: a.number.trim() }))
+    .filter((a) => a.number.length > 0);
+}
+
 const BY_VALUE = new Map(PAYMENT_METHODS.map((m) => [m.value, m]));
 
 /** Info for a stored method, or null for a missing/unknown value. */

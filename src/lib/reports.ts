@@ -90,6 +90,100 @@ export function breakdownByMethod(
   }));
 }
 
+export interface TrendBucket {
+  /** YYYY-MM-DD for daily buckets, YYYY-MM for monthly ones. */
+  key: string;
+  /** Short axis label ("১৯", "জুলাই"). */
+  label: string;
+  /** Full label for the tooltip readout. */
+  fullLabel: string;
+  got: number; // poisha received in this bucket
+  gave: number; // poisha given out in this bucket
+}
+
+const monthFormatter = new Intl.DateTimeFormat("bn-BD", { month: "short" });
+const monthYearFormatter = new Intl.DateTimeFormat("bn-BD", {
+  month: "long",
+  year: "numeric",
+});
+const dayFormatter = new Intl.NumberFormat("bn-BD");
+
+function addDays(isoDate: string, days: number): string {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + days));
+  return dt.toISOString().slice(0, 10);
+}
+
+/**
+ * Entries bucketed into a continuous time series for the trend chart.
+ *
+ * Empty buckets are kept: a bar chart over time whose gaps are closed up
+ * silently squeezes quiet days out of existence and makes activity look
+ * steadier than it was. Short ranges bucket by day, "সব" by month — 400 daily
+ * bars in a phone-width chart is noise, not a trend.
+ */
+export function trendBuckets(
+  entries: LedgerEntry[],
+  range: DateRange,
+): TrendBucket[] {
+  const dates = entries.map((e) => e.entry_date).sort();
+  const from = range.from ?? dates[0];
+  const to = range.to ?? dates[dates.length - 1];
+  if (!from || !to || from > to) return [];
+
+  // ~10 weeks of daily bars is the most a phone-width chart carries.
+  const spanDays =
+    (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) /
+    86400000;
+  const monthly = spanDays > 70;
+
+  const buckets = new Map<string, TrendBucket>();
+  const makeBucket = (key: string): TrendBucket => {
+    const [y, m, d] = `${key}${monthly ? "-01" : ""}`.split("-").map(Number);
+    const dt = new Date(y, m - 1, d);
+    return {
+      key,
+      label: monthly ? monthFormatter.format(dt) : dayFormatter.format(d),
+      fullLabel: monthly ? monthYearFormatter.format(dt) : formatDate(key),
+      got: 0,
+      gave: 0,
+    };
+  };
+
+  // Seed every bucket in the span so gaps render as gaps.
+  if (monthly) {
+    let [y, m] = from.split("-").map(Number);
+    const end = to.slice(0, 7);
+    for (let key = from.slice(0, 7); key <= end; key = `${y}-${pad(m)}`) {
+      buckets.set(key, makeBucket(key));
+      if (++m > 12) {
+        m = 1;
+        y++;
+      }
+    }
+  } else {
+    for (let day = from; day <= to; day = addDays(day, 1)) {
+      buckets.set(day, makeBucket(day));
+    }
+  }
+
+  for (const e of entries) {
+    const key = monthly ? e.entry_date.slice(0, 7) : e.entry_date;
+    const bucket = buckets.get(key);
+    if (!bucket) continue; // outside the range — already filtered, but be safe
+    if (e.type === "got") bucket.got += e.amount;
+    else bucket.gave += e.amount;
+  }
+
+  return Array.from(buckets.values()).sort((a, b) =>
+    a.key.localeCompare(b.key),
+  );
+}
+
+function pad(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
 /** Build a CSV (with Bangla-friendly UTF-8 BOM) of the given entries. */
 export function toCsv(
   entries: LedgerEntry[],

@@ -1,6 +1,7 @@
 "use client";
 
 import { BackLink, ScreenLoading } from "@/components/ledger/shared";
+import { TrendChart } from "@/components/ledger/trend-chart";
 import { useAllData } from "@/hooks/use-all-data";
 import { todayISODate } from "@/lib/dates";
 import { formatTaka } from "@/lib/money";
@@ -12,6 +13,7 @@ import {
   rangeLabel,
   summarize,
   toCsv,
+  trendBuckets,
   type RangePreset,
 } from "@/lib/reports";
 import { Download, Printer } from "lucide-react";
@@ -36,6 +38,10 @@ export default function ReportsPage() {
   );
   const summary = useMemo(() => summarize(filtered), [filtered]);
   const byMethod = useMemo(() => breakdownByMethod(filtered), [filtered]);
+  const buckets = useMemo(
+    () => trendBuckets(filtered, range),
+    [filtered, range],
+  );
 
   // Per-contact net within the range, biggest receivable first.
   const perContact = useMemo(() => {
@@ -138,6 +144,8 @@ export default function ReportsPage() {
             দিলাম − পেলাম (বাড়লে পাওনা বেড়েছে)
           </p>
         </section>
+
+        <TrendChart buckets={buckets} />
 
         {perContact.length > 0 && (
           <section className="mt-4">

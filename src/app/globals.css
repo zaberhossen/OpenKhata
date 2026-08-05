@@ -49,6 +49,17 @@
   --color-gave: 220 38 38; /* red-600 */
   --color-gave-light: 254 226 226; /* red-100 */
 
+  /*
+   * Chart marks. Deliberately *not* the got/gave text tokens above: green-600
+   * against red-600 collapses to ΔE 5.0 under deuteranopia — the two bars in a
+   * group would be one color for a red-green colorblind reader. Darkening only
+   * the red to red-800 lifts the pair to ΔE 17.2 and passes every check in the
+   * palette validator (lightness band, chroma, CVD, normal-vision, contrast),
+   * while the green stays exactly the one users already read as "পেলাম".
+   */
+  --color-chart-got: 22 163 74; /* green-600 — identical to --color-got */
+  --color-chart-gave: 153 27 27; /* red-800 */
+
   --color-background: 248 250 252; /* slate-50 */
   --color-surface: 255 255 255;
   --color-border: 226 232 240; /* slate-200 */
@@ -59,9 +70,52 @@
   --tap-target-min: 3rem;
 }
 
+/*
+ * Zoom is disabled app-wide (see `viewport` in app/layout.tsx).
+ *  - touch-action: manipulation  → kills double-tap-to-zoom, keeps scroll/tap
+ *  - text-size-adjust: 100%      → stops iOS inflating text in landscape
+ * Pinch on iOS is cancelled in JS by <NoZoom />, which the meta can't do.
+ */
+html {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   background-color: rgb(var(--color-background));
   color: rgb(var(--color-text));
+}
+
+/*
+ * Mobile scrollbars are hidden: touch platforms already draw a transient
+ * overlay indicator while you drag, so a persistent bar only steals width and
+ * cuts a grey stripe through our rounded cards. Desktop keeps its scrollbar —
+ * mouse users need something to grab.
+ */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge */
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+/* Opt-in on any platform, e.g. horizontally scrolling chip rows. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 /*

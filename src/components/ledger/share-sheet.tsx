@@ -29,9 +29,11 @@ export function ShareSheet({
       <button
         type="button"
         onClick={async () => {
-          // Prefer the OS share sheet; fall back to our own on failure.
-          if (targets.canNativeShare && (await nativeShare(title, message))) {
-            return;
+          // Prefer the OS share sheet. Opening ours after it closes is the
+          // double-prompt bug: dismissing the OS sheet is the user saying
+          // "not now", so only a device with no Web Share falls through.
+          if (targets.canNativeShare) {
+            if ((await nativeShare(title, message)) !== "unsupported") return;
           }
           setOpen(true);
         }}

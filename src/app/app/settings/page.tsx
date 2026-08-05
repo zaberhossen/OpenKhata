@@ -155,9 +155,10 @@ export default function SettingsPage() {
             নম্বর দেখিয়ে কাস্টমারের কাছ থেকে টাকা নিতে পারবেন।
           </p>
           <PaymentAccountsForm />
+          {/* The one loud button in this card — add/save are inline above. */}
           <Link
             href="/app/collect"
-            className="mt-3 flex min-h-tap items-center justify-center gap-2 rounded-2xl bg-primary font-bold text-white shadow-lg hover:bg-primary-dark"
+            className="mt-4 flex min-h-tap items-center justify-center gap-2 rounded-2xl bg-primary font-bold text-white shadow-lg hover:bg-primary-dark"
           >
             <Wallet size={18} aria-hidden />
             টাকা নিন (QR দেখান)

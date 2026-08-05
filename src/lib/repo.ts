@@ -5,7 +5,11 @@ import {
   type EntryType,
   type SyncedTable,
 } from "./db";
-import type { PaymentAccount, PaymentMethod } from "./payments";
+import {
+  normalizeAccounts,
+  type PaymentAccount,
+  type PaymentMethod,
+} from "./payments";
 import { newId, nowISO } from "./ids";
 
 const DEFAULT_BUSINESS_NAME = "আমার ব্যবসা";
@@ -55,9 +59,7 @@ export async function ensureDefaultBusiness(): Promise<string> {
 export async function setPaymentAccounts(
   accounts: PaymentAccount[],
 ): Promise<void> {
-  const cleaned = accounts
-    .map((a) => ({ method: a.method, number: a.number.trim() }))
-    .filter((a) => a.number.length > 0);
+  const cleaned = normalizeAccounts(accounts);
   await db.transaction("rw", db.businesses, db.outbox, async () => {
     const id = await ensureDefaultBusiness();
     await db.businesses.update(id, {

@@ -110,8 +110,11 @@ export function ReferralCard() {
       <button
         type="button"
         onClick={async () => {
-          const shared = await nativeShare("ওপেনখাতা", shareText);
-          if (!shared) void copy();
+          // Copy only when Web Share is unavailable — a dismissed OS sheet
+          // shouldn't silently hijack the clipboard.
+          if ((await nativeShare("ওপেনখাতা", shareText)) === "unsupported") {
+            void copy();
+          }
         }}
         className="mt-3 flex min-h-tap w-full items-center justify-center gap-2 rounded-2xl bg-primary font-bold text-white shadow-lg hover:bg-primary-dark"
       >

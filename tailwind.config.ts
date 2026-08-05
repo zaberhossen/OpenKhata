@@ -18,6 +18,10 @@ const config: Config = {
           DEFAULT: "rgb(var(--color-gave) / <alpha-value>)",
           light: "rgb(var(--color-gave-light) / <alpha-value>)",
         },
+        chart: {
+          got: "rgb(var(--color-chart-got) / <alpha-value>)",
+          gave: "rgb(var(--color-chart-gave) / <alpha-value>)",
+        },
         background: "rgb(var(--color-background) / <alpha-value>)",
         surface: "rgb(var(--color-surface) / <alpha-value>)",
         border: "rgb(var(--color-border) / <alpha-value>)",

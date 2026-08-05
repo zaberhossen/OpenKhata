@@ -81,22 +81,32 @@ export function shareTargets(phone: string, message: string): ShareTargets {
   };
 }
 
-/** Try the native share sheet; returns false if unavailable or dismissed. */
+/**
+ * Outcome of a Web Share attempt. "dismissed" is deliberately distinct from
+ * "unsupported": a user who closed the OS sheet has finished interacting, so
+ * callers must not chain a fallback prompt on top of it. Only "unsupported"
+ * means Web Share never ran and a fallback is warranted.
+ */
+export type NativeShareResult = "shared" | "dismissed" | "unsupported";
+
+/** Try the native share sheet. */
 export async function nativeShare(
   title: string,
   text: string,
-): Promise<boolean> {
+): Promise<NativeShareResult> {
   if (
     typeof navigator === "undefined" ||
     typeof navigator.share !== "function"
   ) {
-    return false;
+    return "unsupported";
   }
   try {
     await navigator.share({ title, text });
-    return true;
-  } catch {
-    // AbortError (user dismissed) or NotAllowedError — treat as no-op.
-    return false;
+    return "shared";
+  } catch (err) {
+    // AbortError = the user closed the sheet on purpose. Anything else
+    // (NotAllowedError, no share target) means Web Share couldn't serve us.
+    const name = (err as DOMException | undefined)?.name;
+    return name === "AbortError" ? "dismissed" : "unsupported";
   }
 }
