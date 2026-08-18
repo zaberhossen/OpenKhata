@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./public/brand/logo.svg" alt="OpenKhata Logo" width="180" />
+</p>
+
 # ওপেনখাতা · OpenKhata
 
 > **ছোট ব্যবসার জন্য ফ্রি ও ওপেন-সোর্স ডিজিটাল বাকির খাতা** — নেট ছাড়াই চলে, ডেটা কখনো হারায় না।
@@ -47,6 +51,16 @@ configuration the app is 100% local and fully offline. Setup:
 [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) · Plan:
 [ROADMAP.md](./ROADMAP.md) · Google verification:
 [docs/GOOGLE_VERIFICATION.md](./docs/GOOGLE_VERIFICATION.md).
+
+## Screenshots
+
+<p align="center">
+  <img src="./docs/screenshots/screenshot-home.png" alt="Home screen" width="260" />
+  <img src="./docs/screenshots/screenshot-ledger.png" alt="Ledger screen" width="260" />
+  <img src="./docs/screenshots/screenshot-transaction.png" alt="Transaction entry" width="260" />
+</p>
+
+> Live demo: [open-khata.vercel.app](https://open-khata.vercel.app)
 
 ## Stack
 
